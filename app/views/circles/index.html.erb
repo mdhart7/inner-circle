@@ -1,0 +1,139 @@
+<style>
+.circle-add-box,
+.circle-qr-box {
+  background: #111;
+  border: 1px solid #333;
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.circle-input {
+  width: 90%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  color: white;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.circle-add-btn {
+  width: 90%;
+  padding: 12px;
+  border-radius: 12px;
+  background: #00bfff;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.invite-qr {
+  margin-top: 10px;
+  width: 180px;
+  height: 180px;
+}
+
+.circle-member-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 20px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.member-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #444;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-remove-btn {
+  margin-left: auto;
+  color: #ff5555;
+  font-size: 18px;
+}
+</style>
+
+
+<div class="inner-container">
+   <%= link_to root_path, class: "nav-btn" do %>
+    <i class="fa-solid fa-arrow-left"></i> Back to Feed
+  <% end %>
+
+  <h1 class="page-title">My Circle</h1>
+  <p class="page-subtitle">Add or invite your council</p>
+
+
+  <div class="circle-add-box">
+    <h3>Go Add Your Inner Circle thats already here</h3>
+
+    <%= form_with url: circle_members_path, method: :post, local: true do %>
+      <input 
+        type="text" 
+        name="identifier" 
+        placeholder="Enter email or username"
+        class="circle-input"
+        required
+      >
+      <button type="submit" class="circle-add-btn">Add</button>
+    <% end %>
+  </div>
+
+
+
+  
+  <div class="circle-qr-box">
+    <h3>Invite your people via QR Code</h3>
+    <p>Have your people scan to join the app</p>
+
+    <%= image_tag(
+      "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=#{CGI.escape(new_user_registration_url)}",
+      alt: "Invite QR Code",
+      class: "invite-qr"
+    ) %>
+  </div>
+
+
+
+ 
+  <h2 class="feed-header">Your Inner Circle</h2>
+
+  <% if @circle_members.any? %>
+    <% @circle_members.each do |member| %>
+      <div class="circle-member-card">
+
+        <div class="member-avatar">
+          <%= member.initials %>
+        </div>
+
+        <div class="member-info">
+          <strong><%= member.full_name %></strong><br>
+          <span class="username">@<%= member.username %></span>
+        </div>
+
+        <%= link_to circle_member_path(member),
+              method: :delete,
+              data: { confirm: "Remove #{member.full_name} from your circle?" },
+              class: "circle-remove-btn" do %>
+          <i class="fa-solid fa-user-minus"></i>
+        <% end %>
+
+      </div>
+    <% end %>
+  <% else %>
+    <p style="color:#888; margin-top:10px;">You haven't added anyone yet.</p>
+  <% end %>
+
+</div>

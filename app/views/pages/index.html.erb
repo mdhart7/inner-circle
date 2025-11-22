@@ -1,0 +1,227 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: #000 !important; color: #fff !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    min-height: 100vh;
+  }
+
+  .nav-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px; border-bottom: 1px solid #333;
+    background-color: #000; position: sticky; top: 0; z-index: 100;
+  }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
+  .nav-btn {
+    color: #999; text-decoration: none; font-size: 14px;
+    display: inline-flex; gap: 6px; align-items: center;
+  }
+  .nav-btn:hover { color: #fff; }
+
+  .login-btn {
+    background-color: #00bfff; color: #000; padding: 8px 20px;
+    border-radius: 6px; font-weight: 600; text-decoration: none;
+  }
+
+  .inner-container { max-width: 600px; margin: 20px auto; padding: 20px; }
+  
+.page-subtitle {
+  margin-bottom: 25px;
+}
+
+.upload-box {
+  background-color: #1a1a1a;
+  border: 2px dashed #444;
+  border-radius: 20px;
+  padding: 40px 20px;
+  margin: 0 auto 30px auto;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  cursor: pointer;
+  display: block;
+}
+
+.upload-icon-emoji {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.upload-text {
+  color: #bbb;
+  font-size: 16px;
+}
+
+.post-btn {
+  width: 90%;
+  max-width: 500px;
+  padding: 15px;
+  margin: 0 auto 20px auto;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  display: block;
+}
+
+
+  .photo-card {
+    background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 20px;
+    border: 1px solid #222; position: relative;
+  }
+  .uploaded-image { width: 100%; border-radius: 8px; margin-bottom: 15px; }
+
+  .delete-photo-btn {
+    position: absolute; top: 15px; right: 15px; background-color: red;
+    width: 35px; height: 35px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; border: none;
+  }
+
+  .vote-section { display: flex; justify-content: space-between; margin-top: 15px; }
+  .vote-buttons { display: flex; gap: 10px; flex: 1; }
+  .vote-btn {
+    flex: 1; padding: 15px; border-radius: 8px; border: none;
+    font-size: 20px; font-weight: 700; cursor: pointer;
+  }
+  .vote-yes { background-color: #00ff00; color: #000; }
+  .vote-no { background-color: #ff0000; color: #fff; }
+
+  .vote-count {
+    background-color: #222; padding: 10px 15px;
+    border-radius: 8px; text-align: center; font-size: 14px;
+  }
+</style>
+
+<div class="nav-bar">
+  <div class="nav-links">
+    <%= link_to root_path, class: "nav-btn" do %>
+      <i class="fa-solid fa-house"></i> Home
+    <% end %>
+
+    <%= link_to circle_path, class: "nav-btn" do %>
+      <i class="fa-solid fa-users"></i> My Circle
+    <% end %>
+
+    <%= link_to "/stylist", class: "nav-btn" do %>
+      <i class="fa-solid fa-wand-magic-sparkles"></i> Ask Milo
+    <% end %>
+
+    <%= link_to "https://instagram.com", class: "nav-btn", target: "_blank" do %>
+      <i class="fa-brands fa-instagram"></i> Ready to Post
+    <% end %>
+  </div>
+
+  <% if user_signed_in? %>
+    <%= link_to destroy_user_session_path, method: :delete, class: "login-btn" do %>
+      Logout
+    <% end %>
+  <% else %>
+    <%= link_to new_user_session_path, class: "login-btn" do %>
+      Login
+    <% end %>
+  <% end %>
+</div>
+
+<div class="inner-container">
+
+  <h1 class="page-title">Inner Circle</h1>
+  <p class="page-subtitle">Ask Your Inner Circle Before You Post It On Instagram</p>
+
+
+  <% if user_signed_in? %>
+    <%= form_with url: posts_path, method: :post, local: true, html: { multipart: true } do %>
+
+      <label class="upload-box">
+        <div class="upload-icon-emoji">📸</div>
+        <div class="upload-text">Tap to Upload</div>
+        <%= file_field_tag :query_image, accept: "image/*", style: "display:none;" %>
+      </label>
+
+      <button type="submit" class="post-btn">See What Your People Think </button>
+
+    <% end %>
+  <% else %>
+    <div class="upload-box" onclick="alert('Please sign in to upload')">
+      <div class="upload-icon-emoji">📸</div>
+      <div class="upload-text">Sign in to upload</div>
+    </div>
+  <% end %>
+
+  <h2 class="feed-header"> Feed</h2>
+
+  <% @posts.each do |post| %>
+    <div class="photo-card" data-post-id="<%= post.id %>">
+
+      <% if post.user_id == current_user&.id %>
+        <%= link_to post_path(post), method: :delete, class: "delete-photo-btn",
+            data: { confirm: "Delete this post?" } do %>
+          <i class="fa-solid fa-trash"></i>
+        <% end %>
+      <% end %>
+
+      <% if post.image.present? %>
+        <%= image_tag post.image.url, class: "uploaded-image" %>
+      <% end %>
+
+      <div class="post-author">Posted by <%= post.user.full_name %></div>
+
+      <div class="vote-section">
+        <div class="vote-buttons">
+          <button class="vote-btn vote-yes" onclick="vote(<%= post.id %>, 'yes')"></button>
+          <button class="vote-btn vote-no" onclick="vote(<%= post.id %>, 'no')"></button>
+        </div>
+
+        <div class="vote-count">
+          <span id="count-<%= post.id %>" class="count-number"><%= post.total_votes_count %></span>
+          <div class="vote-breakdown">
+            <span id="yes-<%= post.id %>"><%= post.yes_votes_count %></span> yes •
+            <span id="no-<%= post.id %>"><%= post.no_votes_count %></span> no
+          </div>
+          <div id="status-<%= post.id %>" class="vote-status">
+            <% if current_user %>
+              <% vote = post.user_vote(current_user) %>
+              <% if vote %>
+                You voted <%= vote.vote_type == "yes" ? "yes" : "no" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  <% end %>
+
+</div>
+
+
+<script>
+  
+  async function vote(postId, voteType) {
+    try {
+      const response = await fetch(`/posts/${postId}/vote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ vote_type: voteType })
+      });
+
+      const data = await response.json();
+
+      document.getElementById(`count-${postId}`).textContent = data.total_count;
+      document.getElementById(`yes-${postId}`).textContent = data.yes_count;
+      document.getElementById(`no-${postId}`).textContent = data.no_count;
+
+      document.getElementById(`status-${postId}`).textContent =
+        data.user_vote ? `You voted ${data.user_vote === 'yes' ? '❤️' : '✖️'}` : '';
+    } catch (err) {
+      alert("Vote failed — try again.");
+    }
+  }
+</script>

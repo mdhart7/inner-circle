@@ -1,0 +1,79 @@
+<div class="circle-list">
+
+  <% if current_user.all_circle_users.any? %>
+    <% current_user.all_circle_users.each do |friend| %>
+      <div class="circle-member">
+        <div class="member-info">
+          <div class="member-avatar"><%= friend.initials %></div>
+
+          <div>
+            <div style="font-weight: 600;"><%= friend.full_name %></div>
+            <div style="font-size: 12px; color: #999;">@<%= friend.username %></div>
+            <div style="font-size: 11px; color: #555;"><%= friend.email %></div>
+          </div>
+        </div>
+
+        <% cm = current_user.circle_members.find_by(member_id: friend.id) %>
+        <% if cm %>
+          <%= link_to circle_member_path(cm),
+              data: { turbo_method: :delete,
+                      turbo_confirm: "Remove #{friend.full_name} from your circle?" },
+              class: "nav-btn",
+              style: "color:#ff0000;" do %>
+            <i class="fa-solid fa-trash"></i>
+          <% end %>
+        <% end %>
+
+      </div>
+    <% end %>
+
+  <% else %>
+    <div style="text-align: center; padding: 40px; color: #666;">
+      <p>Your circle is empty. Add someone.</p>
+    </div>
+  <% end %>
+
+
+  
+  <button class="add-member-btn" onclick="toggleAddFriend()"
+          style="background:#00bfff; color:#000; padding:10px 20px; border-radius:8px; border:none; font-weight:600; cursor:pointer; width:100%; margin-top:15px;">
+    <i class="fa-solid fa-plus"></i> Add to Circle
+  </button>
+
+  
+  <div id="add-friend-options" class="invite-form" style="display:none; margin-top:20px;">
+
+    <h3 style="margin-bottom: 15px;">Add to Circle</h3>
+
+    
+    <h4 style="margin-bottom:10px; color:#ccc;">Add by Username or Email</h4>
+
+    <%= form_with url: circle_members_path, method: :post, local: true do %>
+      <div class="form-group">
+        <label style="color:#ccc;">Username or Email</label>
+        <input type="text"
+               name="identifier"
+               placeholder="milo   •   milo@example.com"
+               style="width:100%; padding:12px; background:#222; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px;">
+      </div>
+
+      <%= submit_tag "Add to Circle",
+            class: "submit-btn",
+            style:"width:100%; padding:15px; background:#00bfff; color:#000; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; margin-top:10px;" %>
+    <% end %>
+
+    
+    <button onclick="toggleAddFriend()"
+            style="width:100%; padding:15px; background:#666; color:#fff; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; margin-top:10px;">
+      Cancel
+    </button>
+
+  </div>
+</div>
+
+<script>
+function toggleAddFriend() {
+  const box = document.getElementById("add-friend-options");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+</script>
