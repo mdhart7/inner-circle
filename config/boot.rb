@@ -1,8 +1,7 @@
-# Set up gems listed in the Gemfile.
+
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 
-require "bundler/setup" # Set up gems listed in the Gemfile.
-require "bootsnap/setup" # Speed up boot time by caching expensive operations.
+require "bundler/setup" 
+require "bootsnap/setup" 
 
-# Load dotenv as early as possible
 require 'dotenv/load'
