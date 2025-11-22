@@ -167,6 +167,7 @@
       <% if post.image.present? %>
         <%= image_tag post.image.url, class: "uploaded-image" %>
       <% end %>
+      <p class="permanent-caption">This Hard?</p>
 
       <div class="post-author">Posted by <%= post.user.full_name %></div>
 
