@@ -220,7 +220,7 @@
       document.getElementById(`no-${postId}`).textContent = data.no_count;
 
       document.getElementById(`status-${postId}`).textContent =
-        data.user_vote ? `You voted ${data.user_vote === 'yes' ? '❤️' : '✖️'}` : '';
+        data.user_vote ? `You voted ${data.user_vote === 'yes' ? '✅' : '❌'}` : '';
     } catch (err) {
       alert("Vote failed — try again.");
     }
