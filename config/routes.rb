@@ -3,23 +3,15 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  resource :circle, controller: "circles", only: [:index]
 
-  get "/circle", to: "circles#index"
-
-  get    "/stylist",         to: "stylist#index"
-  post   "/stylist/chat",    to: "stylist#chat",  as: :stylist_chat
-  delete "/stylist/clear",   to: "stylist#clear", as: :stylist_clear
-
-  resources :circle_members, only: [:create, :destroy]
+  resources :circle_members do
+    member do
+      patch :accept
+    end
+  end
 
   resources :posts do
     post :vote, on: :member
   end
-  
-  resources :circle_members do
-  member do
-    patch :accept
-  end
-end
-
 end
