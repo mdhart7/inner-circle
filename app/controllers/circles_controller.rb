@@ -2,6 +2,6 @@ class CirclesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @circle_members = current_user.all_circle_users
+    @circle_relationships = current_user.circle_members.includes(:member)
   end
 end
