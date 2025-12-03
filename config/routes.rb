@@ -15,4 +15,11 @@ Rails.application.routes.draw do
   resources :posts do
     post :vote, on: :member
   end
+  
+  resources :circle_members do
+  member do
+    patch :accept
+  end
+end
+
 end

@@ -3,6 +3,7 @@
 # Table name: circle_members
 #
 #  id         :bigint           not null, primary key
+#  status     :string           default("pending")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  member_id  :bigint           not null
@@ -24,4 +25,5 @@ class CircleMember < ApplicationRecord
   belongs_to :member, class_name: "User"
 
   validates :member_id, uniqueness: { scope: :user_id }
+  
 end

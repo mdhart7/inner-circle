@@ -131,4 +131,26 @@
     <p style="color:#888; margin-top:10px;">You haven't added anyone yet.</p>
   <% end %>
 
+<h2 class="feed-header">Incoming Requests</h2>
+
+<% if current_user.incoming_requests.any? %>
+  <% current_user.incoming_requests.each do |req| %>
+    <div class="circle-member-card">
+      <div class="member-avatar"><%= req.user.initials %></div>
+
+      <div class="member-info">
+        <strong><%= req.user.full_name %></strong><br>
+        <span>@<%= req.user.username %></span>
+      </div>
+
+      <%= link_to "Accept", accept_circle_member_path(req),
+            method: :patch,
+            class: "circle-remove-btn",
+            data: { confirm: "Accept this request?" } %>
+    </div>
+  <% end %>
+<% else %>
+  <p style="color:#888;">No pending requests.</p>
+<% end %>
+
 </div>

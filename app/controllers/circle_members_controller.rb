@@ -1,21 +1,13 @@
 class CircleMembersController < ApplicationController
   before_action :authenticate_user!
 
+
   def create
-    input = params[:identifier].to_s.strip.downcase
+    identifier = params[:identifier]&.strip
+    member = User.find_by(email: identifier) || User.find_by(username: identifier)
 
-    if input.blank?
-      redirect_to circle_path, alert: "Please enter a username or email."
-      return
-    end
-
-    
-    member = User.where("LOWER(username) = ?", input)
-                 .or(User.where("LOWER(email) = ?", input))
-                 .first
-
-    unless member
-      redirect_to circle_path, alert: "No user found with that username or email."
+    if member.nil?
+      redirect_to circle_path, alert: "User not found."
       return
     end
 
@@ -24,24 +16,56 @@ class CircleMembersController < ApplicationController
       return
     end
 
-    if current_user.circle_members.exists?(member_id: member.id)
-      redirect_to circle_path, alert: "#{member.username || member.email} is already in your circle."
+    existing = CircleMember.find_by(user_id: current_user.id, member_id: member.id)
+
+    if existing
+      redirect_to circle_path, alert: "Already added or pending."
       return
     end
 
-    CircleMember.create!(user_id: current_user.id, member_id: member.id)
-    redirect_to circle_path, notice: "#{member.username || member.email} added to your circle!"
+    CircleMember.create!(
+      user: current_user,
+      member: member,
+      status: "pending"
+    )
+
+    redirect_to circle_path, notice: "Request sent to #{member.full_name}."
   end
 
-  def destroy
-    cm = current_user.circle_members.find_by(id: params[:id])
-
-    unless cm
-      redirect_to circle_path, alert: "Circle member not found."
+  
+  def accept
+    cm = CircleMember.find(params[:id])
+    
+    if cm.member_id != current_user.id
+      redirect_to circle_path, alert: "Unauthorized"
       return
     end
 
-    cm.destroy
-    redirect_to circle_path, notice: "Removed from your circle."
+    cm.update(status: "accepted")
+
+    CircleMember.find_or_create_by!(
+      user_id: current_user.id,
+      member_id: cm.user_id,
+      status: "accepted"
+    )
+
+    redirect_to circle_path, notice: "Request accepted!"
+  end
+
+
+  def destroy
+    cm = CircleMember.find(params[:id])
+
+    if cm.user_id == current_user.id || cm.member_id == current_user.id
+      # Remove both directions
+      CircleMember.where(
+        user_id: [cm.user_id, cm.member_id],
+        member_id: [cm.user_id, cm.member_id]
+      ).destroy_all
+
+      redirect_to circle_path, notice: "Removed from circle."
+    else
+      redirect_to circle_path, alert: "Unauthorized."
+    end
   end
 end
