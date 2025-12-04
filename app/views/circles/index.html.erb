@@ -106,53 +106,52 @@
   </div>
 
 
-  <h2 class="feed-header">Your Inner Circle</h2>
+<h2 class="feed-header">Your Inner Circle</h2>
 
-  <% if @circle_members.any? %>
-    <% @circle_members.each do |relationship| %>
-      <% member = relationship.member %>
+<% if @circle_members.present? %>
+  <% @circle_members.each do |relationship| %>
+    <% member = relationship.member %>
 
-      <div class="circle-member-card">
-        <div class="member-avatar"><%= member.initials %></div>
+    <div class="circle-member-card">
+      <div class="member-avatar"><%= member.initials %></div>
 
-        <div class="member-info">
-          <strong><%= member.full_name %></strong><br>
-          <span>@<%= member.username %></span>
-        </div>
-
-        <%= link_to circle_member_path(relationship),
-              method: :delete,
-              data: { confirm: "Remove #{member.full_name} from your circle?" },
-              class: "circle-remove-btn" do %>
-          <i class="fa-solid fa-user-minus"></i>
-        <% end %>
+      <div class="member-info">
+        <strong><%= member.full_name %></strong><br>
+        <span>@<%= member.username %></span>
       </div>
-    <% end %>
-  <% else %>
-    <p style="color:#888; margin-top:10px;">You haven't added anyone yet.</p>
+
+      <%= link_to circle_member_path(relationship),
+            method: :delete,
+            data: { confirm: "Remove #{member.full_name} from your circle?" },
+            class: "circle-remove-btn" do %>
+        <i class="fa-solid fa-user-minus"></i>
+      <% end %>
+    </div>
   <% end %>
+<% else %>
+  <p style="color:#888;">You haven't added anyone yet.</p>
+<% end %>
 
 
+<h2 class="feed-header">Incoming Requests</h2>
 
-  <h2 class="feed-header">Incoming Requests</h2>
+<% if @incoming_requests.present? %>
+  <% @incoming_requests.each do |req| %>
+    <div class="circle-member-card">
+      <div class="member-avatar"><%= req.user.initials %></div>
 
-  <% if current_user.incoming_requests.any? %>
-    <% current_user.incoming_requests.each do |req| %>
-      <div class="circle-member-card">
-        <div class="member-avatar"><%= req.user.initials %></div>
-
-        <div class="member-info">
-          <strong><%= req.user.full_name %></strong><br>
-          <span>@<%= req.user.username %></span>
-        </div>
-
-        <%= link_to "Accept",
-            accept_circle_member_path(req),
-            method: :patch,
-            class: "circle-remove-btn",
-            data: { confirm: "Accept this request?" } %>
+      <div class="member-info">
+        <strong><%= req.user.full_name %></strong><br>
+        <span>@<%= req.user.username %></span>
       </div>
-    <% end %>
+
+      <%= link_to "Accept",
+          accept_circle_member_path(req),
+          method: :patch,
+          class: "circle-remove-btn",
+          data: { confirm: "Accept this request?" } %>
+    </div>
+  <% end %>
   <% else %>
     <p style="color:#888;">No pending requests.</p>
   <% end %>
