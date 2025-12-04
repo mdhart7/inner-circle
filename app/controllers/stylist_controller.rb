@@ -2,9 +2,6 @@ class StylistController < ApplicationController
   before_action :authenticate_user!
 
   def index
-  end
-
-  def index
     session[:stylist_messages] ||= []
     @messages = session[:stylist_messages]
   end
@@ -62,15 +59,10 @@ class StylistController < ApplicationController
       PROMPT
 
       session[:stylist_messages].last(10).each do |msg|
-        role = msg["role"] || msg[:role]
-        content = msg["content"] || msg[:content]
-        next if content.blank?
-
-        if role == "user"
-          c.user(content)
-        elsif role == "assistant"
-          c.assistant(content)
-        end
+        role = msg["role"]
+        content = msg["content"]
+        c.user(content) if role == "user"
+        c.assistant(content) if role == "assistant"
       end
 
       ai_reply = c.generate!
@@ -82,8 +74,7 @@ class StylistController < ApplicationController
       ai_text = "Oops — Milo’s off his game! (#{e.class})"
     end
 
-    ai_message = { "role" => "assistant", "content" => ai_text }
-    session[:stylist_messages] << ai_message
+    session[:stylist_messages] << { "role" => "assistant", "content" => ai_text }
 
     render json: { messages: session[:stylist_messages] }
   end
