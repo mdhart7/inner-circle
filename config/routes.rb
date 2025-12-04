@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
+  get "/stylist", to: "stylist#index"
 
   root "pages#index"
 

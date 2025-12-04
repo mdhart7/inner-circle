@@ -2,6 +2,9 @@ class StylistController < ApplicationController
   before_action :authenticate_user!
 
   def index
+  end
+
+  def index
     session[:stylist_messages] ||= []
     @messages = session[:stylist_messages]
   end
