@@ -1,15 +1,15 @@
 Rails.application.routes.draw do
-  root "pages#index"
-
   devise_for :users
 
-  resource :circle, controller: "circles", only: [:index]
+  root "pages#index"
 
   resources :circle_members do
     member do
       patch :accept
     end
   end
+
+  get "/circle", to: "circles#index", as: "circle"
 
   resources :posts do
     post :vote, on: :member
