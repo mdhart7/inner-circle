@@ -1,21 +1,21 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  get  "/stylist",         to: "stylist#index"
-  post "/stylist/chat",    to: "stylist#chat"
-  delete "/stylist/clear", to: "stylist#clear", as: :stylist_clear
-
   root "pages#index"
 
-  resources :circle_members do
+  get    "/stylist",         to: "stylist#index"
+  post   "/stylist/chat",    to: "stylist#chat"
+  delete "/stylist/clear",   to: "stylist#clear", as: :stylist_clear
+
+  post "/posts/:id/vote", to: "posts#vote", as: :vote_post
+
+  get "/circle", to: "circles#index", as: :circle
+
+  resources :circle_members, only: [:create, :destroy] do
     member do
-      patch :accept   
+      patch :accept
     end
   end
 
-  get "/circle", to: "circles#index", as: "circle"
-
-  resources :posts do
-    post :vote, on: :member
-  end
+  resources :posts
 end
