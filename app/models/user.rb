@@ -17,8 +17,13 @@ class User < ApplicationRecord
                 .where(member_id: id, status: "pending")
   end
 
+  # IDs of accepted users I added
   def circle_friends_ids
     CircleMember.where(user_id: id, status: "accepted").pluck(:member_id)
+  end
+
+  def feed_friends
+    User.where(id: circle_friends_ids)
   end
 
   def full_name
