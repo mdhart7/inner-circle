@@ -12,7 +12,10 @@ test:
   database: innercircle_test
 
 production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
-  pool: 5
-  timeout: 5000
+  primary:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+
+  cable:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
