@@ -76,7 +76,6 @@
   <p class="page-subtitle">Add or invite your council</p>
 
 
-
   <div class="circle-add-box">
     <h3>Go Add Your Inner Circle that's already here</h3>
 
@@ -91,7 +90,6 @@
       <button type="submit" class="circle-add-btn">Add</button>
     <% end %>
   </div>
-
 
 
   <div class="circle-qr-box">
@@ -110,7 +108,7 @@
 
 <% if @circle_members.present? %>
   <% @circle_members.each do |relationship| %>
-
+    <% member = relationship.member %>
 
     <div class="circle-member-card">
       <div class="member-avatar"><%= member.initials %></div>
@@ -152,8 +150,8 @@
           data: { confirm: "Accept this request?" } %>
     </div>
   <% end %>
-  <% else %>
-    <p style="color:#888;">No pending requests.</p>
-  <% end %>
+<% else %>
+  <p style="color:#888;">No pending requests.</p>
+<% end %>
 
 </div>

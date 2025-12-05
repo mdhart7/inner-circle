@@ -7,13 +7,18 @@ class User < ApplicationRecord
   has_many :circle_members, dependent: :destroy
   has_many :added_users, through: :circle_members, source: :member
 
-  def accepted_circle_users
-    User.joins(:circle_members)
-        .where(circle_members: { user_id: id, status: "accepted" })
+
+  def accepted_friends
+    added_users.merge(CircleMember.where(status: "accepted"))
   end
 
   def incoming_requests
-    CircleMember.where(member_id: id, status: "pending")
+    CircleMember.includes(:user)
+                .where(member_id: id, status: "pending")
+  end
+
+  def circle_friends_ids
+    CircleMember.where(user_id: id, status: "accepted").pluck(:member_id)
   end
 
   def full_name
@@ -23,9 +28,5 @@ class User < ApplicationRecord
   def initials
     "#{first_name&.first}#{last_name&.first}".presence ||
       username&.first&.upcase || "?"
-  end
-
-  def feed_friends
-    accepted_circle_users
   end
 end

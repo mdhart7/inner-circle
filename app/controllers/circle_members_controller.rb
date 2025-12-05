@@ -2,43 +2,35 @@ class CircleMembersController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    identifier = params[:identifier].to_s.strip.downcase
+    input = params[:identifier].to_s.strip.downcase
+    return redirect_to circle_path, alert: "Please enter a username or email." if input.blank?
 
-    if identifier.blank?
-      redirect_to circle_path, alert: "Please enter an email or username." and return
-    end
-
-    member = User.where("LOWER(email) = ?", identifier)
-                 .or(User.where("LOWER(username) = ?", identifier))
+    member = User.where("LOWER(username) = ?", input)
+                 .or(User.where("LOWER(email) = ?", input))
                  .first
 
-    if member.nil?
-      redirect_to circle_path, alert: "User not found." and return
-    end
-
-    if member.id == current_user.id
-      redirect_to circle_path, alert: "You cannot add yourself." and return
-    end
+    return redirect_to circle_path, alert: "User not found." unless member
+    return redirect_to circle_path, alert: "You cannot add yourself." if member == current_user
 
     existing = CircleMember.find_by(user_id: current_user.id, member_id: member.id)
-    if existing
-      redirect_to circle_path, alert: "Already added or pending." and return
-    end
+    return redirect_to circle_path, alert: "Already added or pending." if existing
 
     CircleMember.create!(
-      user_id: current_user.id,
-      member_id: member.id,
+      user: current_user,
+      member: member,
       status: "pending"
     )
 
     redirect_to circle_path, notice: "Request sent to #{member.full_name}."
   end
 
+
   def accept
     cm = CircleMember.find(params[:id])
 
+    # Only the person who RECEIVED the request may accept it
     unless cm.member_id == current_user.id
-      redirect_to circle_path, alert: "Unauthorized." and return
+      return redirect_to circle_path, alert: "Unauthorized."
     end
 
     cm.update!(status: "accepted")
@@ -52,11 +44,12 @@ class CircleMembersController < ApplicationController
     redirect_to circle_path, notice: "Request accepted!"
   end
 
+
   def destroy
     cm = CircleMember.find(params[:id])
 
     unless cm.user_id == current_user.id || cm.member_id == current_user.id
-      redirect_to circle_path, alert: "Unauthorized." and return
+      return redirect_to circle_path, alert: "Unauthorized."
     end
 
     CircleMember.where(

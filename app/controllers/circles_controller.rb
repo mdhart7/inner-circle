@@ -2,9 +2,7 @@ class CirclesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @circle_members = CircleMember
-                        .where(user_id: current_user.id, status: "accepted")
-                        .includes(:member)
+    @circle_members = current_user.circle_members.where(status: "accepted")
 
     @incoming_requests = current_user.incoming_requests
   end
