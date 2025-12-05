@@ -6,18 +6,13 @@ default: &default
 development:
   <<: *default
   database: innercircle_development
-  username: postgres
-  password:
-  host: localhost
 
 test:
   <<: *default
   database: innercircle_test
-  username: postgres
-  password:
-  host: localhost
 
 production:
   <<: *default
-  url: <%= ENV["DATABASE_URL_POSTGRESQL"] %>
-  sslmode: require
+  url: <%= ENV["DATABASE_URL"] %>
+  pool: 5
+  timeout: 5000
