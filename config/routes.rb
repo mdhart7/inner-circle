@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   get "/circle", to: "circles#index", as: :circle
 
-  resources :circle_members, only: [:create, :destroy] do
+  resources :circle_members, only: [ :create, :destroy ] do
     member do
       patch :accept
     end
