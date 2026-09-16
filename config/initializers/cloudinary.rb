@@ -1,6 +1,10 @@
+if ENV["CLOUDINARY_URL"].present?
+  Cloudinary.config_from_url(ENV["CLOUDINARY_URL"])
+end
+
 Cloudinary.config do |config|
-  config.cloud_name = "dxfftx2yc"
-  config.api_key = "337319117687288"
-  config.api_secret = "vKbBb5_3_Qas_Wk5BvJ9nJVVUBg"
+  config.cloud_name ||= ENV["CLOUDINARY_CLOUD_NAME"]
+  config.api_key ||= ENV["CLOUDINARY_API_KEY"]
+  config.api_secret ||= ENV["CLOUDINARY_API_SECRET"]
   config.cdn_subdomain = true
 end

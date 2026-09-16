@@ -166,12 +166,18 @@
           </div>
         </div>
       <% end %>
-    <% else %>
+    <% elsif @milo_available %>
       <div class="empty-state">
         <i class="fa-solid fa-sparkles"></i>
         <h3>Meet Milo</h3>
         <p>Your virtual creative director | a stylist, color theorist, and instagram technician. All with the mind of a photographer.</p>
         <p>When your friends aren't there, Ask Milo</p>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <i class="fa-solid fa-sparkles"></i>
+        <h3>Milo's coming soon</h3>
+        <p>Milo will be ready to help with your style soon. Check back later.</p>
       </div>
     <% end %>
 
@@ -181,8 +187,8 @@
   </div>
 
   <div class="chat-input-container">
-    <textarea id="messageInput" class="chat-input" placeholder="Ask Milo your style question..." rows="3"></textarea>
-    <button id="sendBtn" class="send-btn" onclick="sendMessage()">
+    <textarea id="messageInput" class="chat-input" placeholder="<%= @milo_available ? 'Ask Milo your style question...' : 'Milo is coming soon...' %>" rows="3" <%= "disabled" unless @milo_available %>></textarea>
+    <button id="sendBtn" class="send-btn" onclick="sendMessage()" <%= "disabled" unless @milo_available %>>
       <i class="fa-solid fa-paper-plane"></i> Send
     </button>
   </div>

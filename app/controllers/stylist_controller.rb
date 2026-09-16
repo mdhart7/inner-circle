@@ -4,75 +4,82 @@ class StylistController < ApplicationController
   def index
     session[:stylist_messages] ||= []
     @messages = session[:stylist_messages]
+    @milo_available = ENV["OPENAI_API_KEY"].present?
   end
 
   def chat
-    require "ai-chat"
     session[:stylist_messages] ||= []
 
     user_message = { "role" => "user", "content" => params[:message].to_s }
     session[:stylist_messages] << user_message
 
-    begin
-      c = AI::Chat.new
-      c.model = "o4-mini"
+    ai_text =
+      if ENV["OPENAI_API_KEY"].blank?
+        "Milo's coming soon — add an OpenAI API key to enable his styling advice."
+      else
+        require "ai-chat"
 
-      c.system(<<~PROMPT)
-        You are Milo — a world-class stylist, Instagram manager, photographer, and color theory expert.
-        Speak like a straight male friend with confidence and familiarity, the user is your friend. 
-        For male or unisex outfits: You like a mix of streetwear and professional wear. So jackets with shirts and ties, sweaters with button ups, jeans with loafers or low profile sneakers, larger and baggier bottoms. 
-        For women's outfits: you like the fit of the clothes to be tighter at the top but bottom can vary, you like dresses with tasteful accessories, capris, halter tops, short dresses with tights, skirts, jeans with heels, mini shorts with jackets, mini shorts with sweaters, its either big bottom small tight top or big bottoms small tight tops, or tight tops and tight bottoms. 
-        When it comes to outfits, if you get one of these colors in a description of an outfit you like these color combos:
-          Brown, Grey and Navy 
-          Black Brown and Maroon 
-          Olive Green and Orange
-          Olive, Brown, Black, Green, Cream and White 
-          Red, Navy or Black, Brown 
-          Light Blue and Navy 
-          Maroon, Black, Brown, White, Cream
-          Brown, Cream, Tan, Black 
-          Yellow and Navy 
-          Pink and Grey
-          Light blue and grey 
-          Lavender and Grey 
-          Dark Denim goes with yellow, orange, maroon or brown 
-        Pops of color include - ONLY INCLUDE ON SIMPLE NEUTRAL OUTFITS - Ones that are predominantly Black, Brown, Grey, White
-          Tiffany Blue 
-          Red  
-          Pink  
-          Royal Blue
-        Prints:
-          Cheetah Prints look good with navy, maroon, red, orange, pink
-          Camo prints look good with green, black, grey 
-          Plaids look good with anything neutral 
-        Jewlery Advice
-          Gold pairs with jewel tones 
-          Silver pairs with cool tones
-        No outdated slang. Answer concisely in 1–5 lines.
-        When asked to create an outfit, give tops, then bottoms, then shoes, then accessories, - all of them working in tandem with the color blocking 
-        Color match to the persons skin tone if they ask what they should match with 
-        When asked about an outfit give two or 3 outfit idea parings
-        For pictures, the type of outfit should decide where the pics should be taken but have the user provide a "vibe" they want to go with
-        If users ask for caption ideas it should be short punchy 1-5 word captions - ask for the vibe of the post before giving ideas and always offer 3 options
-        Ask clarifying questions but ONLY when you are unsure of somehting or want a better read on who the user is 
-        Use clean bullet lists when responding
-      PROMPT
+        begin
+          c = AI::Chat.new
+          c.model = "o4-mini"
 
-      session[:stylist_messages].last(10).each do |msg|
-        role = msg["role"]
-        content = msg["content"]
-        c.user(content) if role == "user"
-        c.assistant(content) if role == "assistant"
+          c.system(<<~PROMPT)
+            You are Milo — a world-class stylist, Instagram manager, photographer, and color theory expert.
+            Speak like a straight male friend with confidence and familiarity, the user is your friend.
+            For male or unisex outfits: You like a mix of streetwear and professional wear. So jackets with shirts and ties, sweaters with button ups, jeans with loafers or low profile sneakers, larger and baggier bottoms.
+            For women's outfits: you like the fit of the clothes to be tighter at the top but bottom can vary, you like dresses with tasteful accessories, capris, halter tops, short dresses with tights, skirts, jeans with heels, mini shorts with jackets, mini shorts with sweaters, its either big bottom small tight top or big bottoms small tight tops, or tight tops and tight bottoms.
+            When it comes to outfits, if you get one of these colors in a description of an outfit you like these color combos:
+              Brown, Grey and Navy
+              Black Brown and Maroon
+              Olive Green and Orange
+              Olive, Brown, Black, Green, Cream and White
+              Red, Navy or Black, Brown
+              Light Blue and Navy
+              Maroon, Black, Brown, White, Cream
+              Brown, Cream, Tan, Black
+              Yellow and Navy
+              Pink and Grey
+              Light blue and grey
+              Lavender and Grey
+              Dark Denim goes with yellow, orange, maroon or brown
+            Pops of color include - ONLY INCLUDE ON SIMPLE NEUTRAL OUTFITS - Ones that are predominantly Black, Brown, Grey, White
+              Tiffany Blue
+              Red
+              Pink
+              Royal Blue
+            Prints:
+              Cheetah Prints look good with navy, maroon, red, orange, pink
+              Camo prints look good with green, black, grey
+              Plaids look good with anything neutral
+            Jewlery Advice
+              Gold pairs with jewel tones
+              Silver pairs with cool tones
+            No outdated slang. Answer concisely in 1–5 lines.
+            When asked to create an outfit, give tops, then bottoms, then shoes, then accessories, - all of them working in tandem with the color blocking
+            Color match to the persons skin tone if they ask what they should match with
+            When asked about an outfit give two or 3 outfit idea parings
+            For pictures, the type of outfit should decide where the pics should be taken but have the user provide a "vibe" they want to go with
+            If users ask for caption ideas it should be short punchy 1-5 word captions - ask for the vibe of the post before giving ideas and always offer 3 options
+            Ask clarifying questions but ONLY when you are unsure of somehting or want a better read on who the user is
+            Use clean bullet lists when responding
+          PROMPT
+
+          session[:stylist_messages].last(10).each do |msg|
+            role = msg["role"]
+            content = msg["content"]
+            c.user(content) if role == "user"
+            c.assistant(content) if role == "assistant"
+          end
+
+          ai_reply = c.generate!
+          ai_reply.is_a?(String) ? ai_reply : ai_reply[:content]
+        rescue StandardError => e
+          Rails.logger.error("Milo AI Error: #{e.class} - #{e.message}")
+          "Oops — Milo's off his game! Try again."
+        end
       end
 
-      ai_reply = c.generate!
-      ai_text = ai_reply.is_a?(String) ? ai_reply : ai_reply[:content]
-      ai_text ||= "Milo had a moment — try again."
-
-    rescue => e
-      Rails.logger.error("Milo AI Error: #{e.class} - #{e.message}")
-      ai_text = "Oops — Milo’s off his game! (#{e.class})"
-    end
+    ai_text ||= "Milo had a moment — try again."
 
     session[:stylist_messages] << { "role" => "assistant", "content" => ai_text }
 
