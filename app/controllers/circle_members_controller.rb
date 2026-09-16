@@ -53,8 +53,8 @@ class CircleMembersController < ApplicationController
     end
 
     CircleMember.where(
-      user_id: [cm.user_id, cm.member_id],
-      member_id: [cm.user_id, cm.member_id]
+      user_id: [ cm.user_id, cm.member_id ],
+      member_id: [ cm.user_id, cm.member_id ]
     ).destroy_all
 
     redirect_to circle_path, notice: "Removed from circle."

@@ -24,6 +24,6 @@ class ApplicationController < ActionController::Base
       :first_name, :last_name, :username
     ])
 
-    devise_parameter_sanitizer.permit(:sign_in, keys: [:login])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [ :login ])
   end
 end
