@@ -16,7 +16,7 @@
 class Vote < ApplicationRecord
   belongs_to :post
   belongs_to :user
-  
-  validates :vote_type, inclusion: { in: ['yes', 'no'] }
+
+  validates :vote_type, inclusion: { in: [ "yes", "no" ] }
   validates :user_id, uniqueness: { scope: :post_id }
 end
