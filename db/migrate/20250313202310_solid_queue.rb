@@ -1,6 +1,6 @@
 class SolidQueue < ActiveRecord::Migration[8.0]
   def change
-    
+
     enable_extension "pg_catalog.plpgsql"
 
     create_table "solid_queue_blocked_executions", force: :cascade do |t|
