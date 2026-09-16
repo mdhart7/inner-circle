@@ -18,7 +18,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 
-gem 'rqrcode'
+gem "rqrcode"
 
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -41,18 +41,16 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
-  
+
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
-  
   gem "brakeman", "~> 7.1.0", require: false
 
-  
   gem "rubocop-rails-omakase", require: false
 end
 
 group :development do
- 
+
   gem "web-console"
 end
 
