@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :store_referral, if: :devise_controller?
 
   protected
 
@@ -9,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_up_path_for(resource)
-    complete_referral(resource)
+    complete_referral(resource, params[:ref])
     root_path
   end
 
@@ -29,13 +28,8 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_in, keys: [ :login ])
   end
 
-  def store_referral
-    referral = params[:ref].to_s.strip.downcase
-    session[:referral_username] = referral if referral.present?
-  end
-
-  def complete_referral(resource)
-    username = session.delete(:referral_username)
+  def complete_referral(resource, referral)
+    username = referral.to_s.strip.downcase
     return if username.blank? || resource.username.blank? || username == resource.username.downcase
 
     referrer = User.find_by("LOWER(username) = ?", username)
