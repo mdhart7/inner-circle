@@ -134,15 +134,6 @@
       <% end %>
     </div>
 
-    <script>
-      function copyReferralLink(button) {
-        const link = document.getElementById("referral-link");
-        navigator.clipboard.writeText(link.value).then(() => {
-          button.textContent = "Copied!";
-          setTimeout(() => button.textContent = "Copy link", 1500);
-        });
-      }
-    </script>
   <% end %>
 <% else %>
   <p style="color:#888;">You haven't added anyone yet.</p>
@@ -167,6 +158,31 @@
           class: "circle-remove-btn",
           data: { confirm: "Accept this request?" } %>
     </div>
+
+    <script>
+      async function copyReferralLink(button) {
+        const link = document.getElementById("referral-link");
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(link.value);
+          } else {
+            link.focus();
+            link.select();
+            document.execCommand("copy");
+            link.setSelectionRange(0, 0);
+          }
+
+          button.textContent = "Copied!";
+          setTimeout(() => button.textContent = "Copy link", 1500);
+        } catch (error) {
+          console.error("Unable to copy referral link:", error);
+          button.textContent = "Select and copy";
+          link.focus();
+          link.select();
+        }
+      }
+    </script>
   <% end %>
 <% else %>
   <p style="color:#888;">No pending requests.</p>

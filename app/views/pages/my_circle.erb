@@ -91,11 +91,26 @@ function toggleAddFriend() {
   box.style.display = box.style.display === "none" ? "block" : "none";
 }
 
-function copyReferralLink(button) {
+async function copyReferralLink(button) {
   const link = document.getElementById("referral-link");
-  navigator.clipboard.writeText(link.value).then(() => {
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(link.value);
+    } else {
+      link.focus();
+      link.select();
+      document.execCommand("copy");
+      link.setSelectionRange(0, 0);
+    }
+
     button.textContent = "Copied!";
     setTimeout(() => button.textContent = "Copy", 1500);
-  });
+  } catch (error) {
+    console.error("Unable to copy referral link:", error);
+    button.textContent = "Select and copy";
+    link.focus();
+    link.select();
+  }
 }
 </script>
