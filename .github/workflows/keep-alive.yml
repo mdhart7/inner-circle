@@ -12,4 +12,4 @@ jobs:
       APP_URL: ${{ vars.APP_URL }}
     steps:
       - name: Ping health check
-        run: curl --fail --silent --show-error --max-time 30 "${APP_URL%/}/up"
+        run: curl --fail --silent --show-error --max-time 120 --retry 3 --retry-all-errors --retry-delay 10 "${APP_URL%/}/up"
