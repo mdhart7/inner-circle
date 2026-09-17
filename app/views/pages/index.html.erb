@@ -140,7 +140,7 @@
   }
   .carousel-arrow i { pointer-events: none; }
   .carousel-arrow:hover { background-color: rgba(0, 0, 0, 0.8); }
-  .carousel-arrow:active {
+  .carousel-arrow:not(:disabled):active {
     transform: translateY(-50%);
   }
   .carousel-arrow.prev { left: 10px; }
