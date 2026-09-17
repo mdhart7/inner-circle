@@ -7,15 +7,16 @@ class PostsController < ApplicationController
   end
 
   def create
-    images = Array(params[:query_images]).presence || Array(params[:query_image]).presence
+    images = Array(params[:query_images] || params["query_images[]"] || params[:query_image]).flatten.compact
+    images.select!(&:present?)
     return redirect_to(root_path, alert: "Please choose at least one photo.") if images.blank?
 
     Poll.transaction do
       poll = current_user.polls.create!
       images.each_with_index do |image, index|
-        post = poll.posts.new(post_params.merge(position: index, user: current_user))
-        post.image = image
-        post.save!
+        poll.posts.create!(
+          post_params.merge(position: index, user: current_user, image: image)
+        )
       end
     end
 

@@ -121,11 +121,13 @@
 
   .carousel { overflow: hidden; }
   .carousel-track {
-    display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+    display: flex; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
   .carousel-track::-webkit-scrollbar { display: none; }
-  .carousel-slide { flex: 0 0 100%; width: 100%; scroll-snap-align: start; }
+  .carousel-slide {
+    flex: 0 0 100%; min-width: 100%; width: 100%; scroll-snap-align: start;
+  }
   .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
   .dot {
     width: 6px; height: 6px; border-radius: 50%; background-color: #444;
