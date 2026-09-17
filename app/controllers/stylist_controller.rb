@@ -15,7 +15,7 @@ class StylistController < ApplicationController
 
     ai_text =
       if ENV["OPENAI_API_KEY"].blank?
-        "MILO coming soon. For styling needs in the meantime, visit Alta: https://www.altadaily.com/"
+        'MILO coming soon. For styling needs in the meantime, visit <a href="https://www.altadaily.com/" target="_blank" rel="noopener">Alta</a>.'
       else
         require "ai-chat"
 
@@ -75,11 +75,11 @@ class StylistController < ApplicationController
           ai_reply.is_a?(String) ? ai_reply : ai_reply[:content]
         rescue StandardError => e
           Rails.logger.error("Milo AI Error: #{e.class} - #{e.message}")
-          "MILO coming soon. For styling needs in the meantime, visit Alta: https://www.altadaily.com/"
+          'MILO coming soon. For styling needs in the meantime, visit <a href="https://www.altadaily.com/" target="_blank" rel="noopener">Alta</a>.'
         end
       end
 
-    ai_text ||= "MILO coming soon. For styling needs in the meantime, visit Alta: https://www.altadaily.com/"
+    ai_text ||= 'MILO coming soon. For styling needs in the meantime, visit <a href="https://www.altadaily.com/" target="_blank" rel="noopener">Alta</a>.'
 
     session[:stylist_messages] << { "role" => "assistant", "content" => ai_text }
 
