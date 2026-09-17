@@ -159,33 +159,47 @@
           data: { confirm: "Accept this request?" } %>
     </div>
 
-    <script>
-      async function copyReferralLink(button) {
-        const link = document.getElementById("referral-link");
-
-        try {
-          if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(link.value);
-          } else {
-            link.focus();
-            link.select();
-            document.execCommand("copy");
-            link.setSelectionRange(0, 0);
-          }
-
-          button.textContent = "Copied!";
-          setTimeout(() => button.textContent = "Copy link", 1500);
-        } catch (error) {
-          console.error("Unable to copy referral link:", error);
-          button.textContent = "Select and copy";
-          link.focus();
-          link.select();
-        }
-      }
-    </script>
   <% end %>
 <% else %>
   <p style="color:#888;">No pending requests.</p>
 <% end %>
 
 </div>
+
+<script>
+  function legacyCopy(link) {
+    link.removeAttribute("readonly");
+    link.focus();
+    link.select();
+    link.setSelectionRange(0, 99999);
+    const copied = document.execCommand("copy");
+    link.setAttribute("readonly", true);
+    return copied;
+  }
+
+  async function copyReferralLink(button) {
+    const link = document.getElementById("referral-link");
+
+    if (legacyCopy(link)) {
+      button.textContent = "Copied!";
+      setTimeout(() => button.textContent = "Copy link", 1500);
+      return;
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(link.value);
+        button.textContent = "Copied!";
+        setTimeout(() => button.textContent = "Copy link", 1500);
+        return;
+      } catch (error) {
+        console.error("Clipboard API copy failed:", error);
+      }
+    }
+
+    button.textContent = "Select and copy";
+    link.focus();
+    link.select();
+    link.setSelectionRange(0, 99999);
+  }
+</script>
