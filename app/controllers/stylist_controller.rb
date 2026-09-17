@@ -15,7 +15,7 @@ class StylistController < ApplicationController
 
     ai_text =
       if ENV["OPENAI_API_KEY"].blank?
-        "Milo's coming soon — add an OpenAI API key to enable his styling advice."
+        "MILO coming soon. For styling needs in the meantime, visit Alta: https://www.altadaily.com/"
       else
         require "ai-chat"
 
