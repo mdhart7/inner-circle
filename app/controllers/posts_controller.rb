@@ -7,7 +7,7 @@ class PostsController < ApplicationController
   end
 
   def create
-    images = Array(params[:query_images] || params["query_images[]"] || params[:query_image]).flatten.compact
+    images = Array(params[:query_images] || params[:query_image]).flatten.compact
     images.select!(&:present?)
     return redirect_to(root_path, alert: "Please choose at least one photo.") if images.blank?
 

@@ -191,7 +191,7 @@
       <label class="upload-box">
         <div class="upload-icon-emoji">📸</div>
         <div class="upload-text">Tap to Upload</div>
-        <%= file_field_tag :query_images, multiple: true, accept: "image/*", style: "display:none;", id: "query-images-input" %>
+        <%= file_field_tag "query_images[]", multiple: true, accept: "image/*", style: "display:none;", id: "query-images-input" %>
       </label>
 
       <button type="submit" class="post-btn">See What Your People Think </button>
