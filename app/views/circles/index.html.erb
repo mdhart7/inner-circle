@@ -103,6 +103,14 @@
     ) %>
   </div>
 
+  <div class="circle-add-box">
+    <h3>Share your referral link</h3>
+    <p>New members who sign up through your link are added to your circle automatically.</p>
+    <input id="referral-link" class="circle-input" type="text"
+           value="<%= new_user_registration_url(ref: current_user.username) %>" readonly>
+    <button type="button" class="circle-add-btn" onclick="copyReferralLink(this)">Copy link</button>
+  </div>
+
 
 <h2 class="feed-header">Your Inner Circle</h2>
 
@@ -125,6 +133,16 @@
         <i class="fa-solid fa-user-minus"></i>
       <% end %>
     </div>
+
+    <script>
+      function copyReferralLink(button) {
+        const link = document.getElementById("referral-link");
+        navigator.clipboard.writeText(link.value).then(() => {
+          button.textContent = "Copied!";
+          setTimeout(() => button.textContent = "Copy link", 1500);
+        });
+      }
+    </script>
   <% end %>
 <% else %>
   <p style="color:#888;">You haven't added anyone yet.</p>

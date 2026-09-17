@@ -131,6 +131,7 @@
         <h1>Sign Up</h1>
 
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+            <%= hidden_field_tag :ref, params[:ref].presence || session[:referral_username] %>
             <% if resource.errors.any? %>
                 <div class="error-messages">
                     <h3><%= pluralize(resource.errors.count, "error") %> prohibited this from being saved:</h3>
