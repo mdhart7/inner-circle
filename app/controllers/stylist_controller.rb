@@ -75,11 +75,11 @@ class StylistController < ApplicationController
           ai_reply.is_a?(String) ? ai_reply : ai_reply[:content]
         rescue StandardError => e
           Rails.logger.error("Milo AI Error: #{e.class} - #{e.message}")
-          "Oops — Milo's off his game! Try again."
+          "MILO coming soon. For styling needs in the meantime, visit Alta: https://www.altadaily.com/"
         end
       end
 
-    ai_text ||= "Milo had a moment — try again."
+    ai_text ||= "MILO coming soon. For styling needs in the meantime, visit Alta: https://www.altadaily.com/"
 
     session[:stylist_messages] << { "role" => "assistant", "content" => ai_text }
 
