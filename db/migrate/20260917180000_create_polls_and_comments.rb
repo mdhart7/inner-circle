@@ -19,12 +19,16 @@ class CreatePollsAndComments < ActiveRecord::Migration[8.0]
     add_index :posts, :poll_id
     add_column :posts, :position, :integer, null: false, default: 0
 
-    select_all("SELECT id, user_id, created_at, updated_at FROM posts").each do |post|
-      poll_id = select_value(
+    connection.select_all("SELECT id, user_id, created_at, updated_at FROM posts").each do |post|
+      poll_id = connection.select_value(
         "INSERT INTO polls (user_id, created_at, updated_at) VALUES " \
-        "(#{quote(post['user_id'])}, #{quote(post['created_at'])}, #{quote(post['updated_at'])}) RETURNING id"
+        "(#{connection.quote(post['user_id'])}, #{connection.quote(post['created_at'])}, " \
+        "#{connection.quote(post['updated_at'])}) RETURNING id"
       )
-      execute("UPDATE posts SET poll_id = #{quote(poll_id)} WHERE id = #{quote(post['id'])}")
+      connection.execute(
+        "UPDATE posts SET poll_id = #{connection.quote(poll_id)} " \
+        "WHERE id = #{connection.quote(post['id'])}"
+      )
     end
   end
 
