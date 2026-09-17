@@ -7,14 +7,21 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = current_user.posts.new(post_params)
-    @post.image = params[:query_image] if params[:query_image].present?
+    images = Array(params[:query_images]).presence || Array(params[:query_image]).presence
+    return redirect_to(root_path, alert: "Please choose at least one photo.") if images.blank?
 
-    if @post.save
-      redirect_to root_path, notice: "Post created successfully."
-    else
-      redirect_to root_path, alert: @post.errors.full_messages.to_sentence
+    Poll.transaction do
+      poll = current_user.polls.create!
+      images.each_with_index do |image, index|
+        post = poll.posts.new(post_params.merge(position: index, user: current_user))
+        post.image = image
+        post.save!
+      end
     end
+
+    redirect_to root_path, notice: "Post created successfully."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to root_path, alert: e.record.errors.full_messages.to_sentence
   end
 
   def update
@@ -31,7 +38,7 @@ class PostsController < ApplicationController
   def destroy
     return redirect_to(root_path, alert: "Not authorized.") unless @post.user_id == current_user.id
 
-    @post.destroy
+    @post.poll ? @post.poll.destroy : @post.destroy
     redirect_to root_path, notice: "Post deleted."
   end
 

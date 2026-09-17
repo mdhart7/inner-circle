@@ -118,6 +118,33 @@
     background-color: #222; padding: 10px 15px;
     border-radius: 8px; text-align: center; font-size: 14px;
   }
+
+  .carousel { overflow: hidden; }
+  .carousel-track {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-slide { flex: 0 0 100%; width: 100%; scroll-snap-align: start; }
+  .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%; background-color: #444;
+    transition: background-color 0.2s ease;
+  }
+  .dot.active { background-color: #00bfff; }
+  .comments-section { margin-top: 15px; }
+  .comments-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .comment { font-size: 14px; color: #ddd; }
+  .comment strong { color: #fff; }
+  .comment-form { display: flex; gap: 8px; }
+  .comment-input {
+    flex: 1; padding: 10px; background-color: #222; border: 1px solid #333;
+    border-radius: 8px; color: #fff; font-size: 14px;
+  }
+  .comment-submit {
+    background-color: #00bfff; color: #000; border: none; border-radius: 8px;
+    padding: 0 16px; font-weight: 600; cursor: pointer;
+  }
 </style>
 
 <div class="nav-bar">
@@ -162,7 +189,7 @@
       <label class="upload-box">
         <div class="upload-icon-emoji">📸</div>
         <div class="upload-text">Tap to Upload</div>
-        <%= file_field_tag :query_image, accept: "image/*", style: "display:none;" %>
+        <%= file_field_tag :query_images, multiple: true, accept: "image/*", style: "display:none;", id: "query-images-input" %>
       </label>
 
       <button type="submit" class="post-btn">See What Your People Think </button>
@@ -177,46 +204,74 @@
 
   <h2 class="feed-header"> Feed</h2>
 
-  <% @posts.each do |post| %>
-    <div class="photo-card" data-post-id="<%= post.id %>">
+  <% @polls.each do |poll| %>
+    <div class="photo-card" data-poll-id="<%= poll.id %>">
 
-      <% if post.user_id == current_user&.id %>
-        <%= link_to post_path(post), method: :delete, class: "delete-photo-btn",
+      <% if poll.user_id == current_user&.id %>
+        <%= link_to post_path(poll.posts.first), method: :delete, class: "delete-photo-btn",
             data: { confirm: "Delete this post?" } do %>
           <i class="fa-solid fa-trash"></i>
         <% end %>
       <% end %>
 
-      <% if post.image.present? %>
-        <%= image_tag post.image.url, class: "uploaded-image" %>
-      <% end %>
-      <p class="permanent-caption">This Hard?</p>
-
-      <div class="post-author">Posted by <%= post.user.full_name %></div>
-
-      <div class="vote-section">
-        <div class="vote-buttons">
-          <button class="vote-btn vote-yes" onclick="vote(<%= post.id %>, 'yes')"></button>
-          <button class="vote-btn vote-no" onclick="vote(<%= post.id %>, 'no')"></button>
-        </div>
-
-        <div class="vote-count">
-          <span id="count-<%= post.id %>" class="count-number"><%= post.total_votes_count %></span>
-          <div class="vote-breakdown">
-            <span id="yes-<%= post.id %>"><%= post.yes_votes_count %></span> yes •
-            <span id="no-<%= post.id %>"><%= post.no_votes_count %></span> no
-          </div>
-          <div id="status-<%= post.id %>" class="vote-status">
-            <% if current_user %>
-              <% vote = post.user_vote(current_user) %>
-              <% if vote %>
-                You voted <%= vote.vote_type == "yes" ? "yes" : "no" %>
+      <div class="carousel">
+        <div class="carousel-track">
+          <% poll.posts.each do |post| %>
+            <div class="carousel-slide">
+              <% if post.image.present? %>
+                <%= image_tag post.image.url, class: "uploaded-image" %>
               <% end %>
+              <p class="permanent-caption">This Hard?</p>
+
+              <div class="vote-section">
+                <div class="vote-buttons">
+                  <button class="vote-btn vote-yes" onclick="vote(<%= post.id %>, 'yes')"></button>
+                  <button class="vote-btn vote-no" onclick="vote(<%= post.id %>, 'no')"></button>
+                </div>
+
+                <div class="vote-count">
+                  <span id="count-<%= post.id %>" class="count-number"><%= post.total_votes_count %></span>
+                  <div class="vote-breakdown">
+                    <span id="yes-<%= post.id %>"><%= post.yes_votes_count %></span> yes •
+                    <span id="no-<%= post.id %>"><%= post.no_votes_count %></span> no
+                  </div>
+                  <div id="status-<%= post.id %>" class="vote-status">
+                    <% if current_user %>
+                      <% vote = post.user_vote(current_user) %>
+                      <% if vote %>
+                        You voted <%= vote.vote_type == "yes" ? "yes" : "no" %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+
+              <div class="comments-section">
+                <div class="comments-list" id="comments-<%= post.id %>">
+                  <% post.comments.each do |comment| %>
+                    <div class="comment"><strong><%= comment.user.full_name %>:</strong> <%= comment.body %></div>
+                  <% end %>
+                </div>
+                <% if user_signed_in? %>
+                  <form class="comment-form" onsubmit="return submitComment(event, <%= post.id %>)">
+                    <input type="text" class="comment-input" id="comment-input-<%= post.id %>"
+                           placeholder="Add a comment..." maxlength="300">
+                    <button type="submit" class="comment-submit">Post</button>
+                  </form>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if poll.carousel? %>
+          <div class="carousel-dots">
+            <% poll.posts.each_with_index do |_post, i| %>
+              <span class="dot <%= "active" if i.zero? %>"></span>
             <% end %>
           </div>
-        </div>
+        <% end %>
       </div>
-
+      <div class="post-author">Posted by <%= poll.user.full_name %></div>
     </div>
   <% end %>
 
@@ -246,5 +301,58 @@
     } catch (err) {
       alert("Vote failed — try again.");
     }
+  }
+
+  document.querySelectorAll(".carousel-track").forEach((track) => {
+    const dots = track.closest(".carousel").querySelectorAll(".dot");
+    if (!dots.length) return;
+    track.addEventListener("scroll", () => {
+      const index = Math.round(track.scrollLeft / track.clientWidth);
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+    }, { passive: true });
+  });
+
+  const imagesInput = document.getElementById("query-images-input");
+  if (imagesInput) {
+    imagesInput.addEventListener("change", () => {
+      const label = imagesInput.closest(".upload-box").querySelector(".upload-text");
+      const count = imagesInput.files.length;
+      label.textContent = count === 0 ? "Tap to Upload" : count === 1 ? "1 photo selected" : `${count} photos selected`;
+    });
+  }
+
+  async function submitComment(event, postId) {
+    event.preventDefault();
+    const input = document.getElementById(`comment-input-${postId}`);
+    const body = input.value.trim();
+    if (!body) return false;
+
+    try {
+      const response = await fetch(`/posts/${postId}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ body })
+      });
+      const data = await response.json();
+      if (data.error) {
+        alert(data.error);
+        return false;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "comment";
+      const strong = document.createElement("strong");
+      strong.textContent = `${data.author}: `;
+      wrapper.appendChild(strong);
+      wrapper.appendChild(document.createTextNode(data.body));
+      document.getElementById(`comments-${postId}`).appendChild(wrapper);
+      input.value = "";
+    } catch (_error) {
+      alert("Comment failed — try again.");
+    }
+    return false;
   }
 </script>

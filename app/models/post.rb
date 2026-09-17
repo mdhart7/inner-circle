@@ -10,10 +10,12 @@
 #
 class Post < ApplicationRecord
   belongs_to :user
+  belongs_to :poll, optional: true
 
   mount_uploader :image, ImageUploader
 
   has_many :votes, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   def yes_votes_count
     votes.loaded? ? votes.count { |vote| vote.vote_type == "yes" } : votes.where(vote_type: "yes").count
