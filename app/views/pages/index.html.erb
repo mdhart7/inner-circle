@@ -126,8 +126,21 @@
   }
   .carousel-track::-webkit-scrollbar { display: none; }
   .carousel-slide {
-    flex: 0 0 100%; min-width: 100%; width: 100%; scroll-snap-align: start;
+    flex: 0 0 100%; min-width: 100%; width: 100%; box-sizing: border-box;
+    scroll-snap-align: start; border-right: 8px solid #000;
   }
+  .carousel-slide:last-child { border-right: none; }
+  .slide-image-wrapper { position: relative; }
+  .carousel-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.55); color: #fff; border: none;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 15px; z-index: 5;
+  }
+  .carousel-arrow:hover { background-color: rgba(0, 0, 0, 0.8); }
+  .carousel-arrow.prev { left: 10px; }
+  .carousel-arrow.next { right: 10px; }
   .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
   .dot {
     width: 6px; height: 6px; border-radius: 50%; background-color: #444;
@@ -220,9 +233,23 @@
         <div class="carousel-track">
           <% poll.posts.each do |post| %>
             <div class="carousel-slide">
-              <% if post.image.present? %>
-                <%= image_tag post.image.url, class: "uploaded-image" %>
-              <% end %>
+              <div class="slide-image-wrapper">
+                <% if post.image.present? %>
+                  <%= image_tag post.image.url, class: "uploaded-image" %>
+                <% end %>
+                <% if poll.carousel? %>
+                  <% unless post == poll.posts.first %>
+                    <button type="button" class="carousel-arrow prev" onclick="scrollCarousel(this, -1)" aria-label="Previous photo">
+                      <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                  <% end %>
+                  <% unless post == poll.posts.last %>
+                    <button type="button" class="carousel-arrow next" onclick="scrollCarousel(this, 1)" aria-label="Next photo">
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                  <% end %>
+                <% end %>
+              </div>
               <p class="permanent-caption">This Hard?</p>
 
               <div class="vote-section">
@@ -303,6 +330,11 @@
     } catch (err) {
       alert("Vote failed — try again.");
     }
+  }
+
+  function scrollCarousel(button, direction) {
+    const track = button.closest(".carousel").querySelector(".carousel-track");
+    track.scrollBy({ left: direction * track.clientWidth, behavior: "smooth" });
   }
 
   document.querySelectorAll(".carousel-track").forEach((track) => {
