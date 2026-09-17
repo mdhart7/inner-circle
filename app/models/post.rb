@@ -16,19 +16,19 @@ class Post < ApplicationRecord
   has_many :votes, dependent: :destroy
 
   def yes_votes_count
-    votes.where(vote_type: "yes").count
+    votes.loaded? ? votes.count { |vote| vote.vote_type == "yes" } : votes.where(vote_type: "yes").count
   end
 
   def no_votes_count
-    votes.where(vote_type: "no").count
+    votes.loaded? ? votes.count { |vote| vote.vote_type == "no" } : votes.where(vote_type: "no").count
   end
 
   def total_votes_count
-    votes.count
+    votes.loaded? ? votes.length : votes.count
   end
 
   def user_vote(current_user)
     return nil unless current_user
-    votes.find_by(user_id: current_user.id)
+    votes.loaded? ? votes.find { |vote| vote.user_id == current_user.id } : votes.find_by(user_id: current_user.id)
   end
 end
