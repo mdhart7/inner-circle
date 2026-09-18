@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   root "pages#index"
 
-  get "/up", to: "rails/health#show", as: :rails_health_check
+  get "/up", to: "health#show", as: :rails_health_check
   get "/manifest.json", to: "rails/pwa#manifest", as: :pwa_manifest
   get "/service-worker.js", to: "rails/pwa#service_worker", as: :pwa_service_worker
 
