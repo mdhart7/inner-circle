@@ -114,6 +114,25 @@
   .vote-yes { background-color: #00ff00; color: #000; }
   .vote-no { background-color: #ff0000; color: #fff; }
 
+  .cover-btn {
+    flex: 0 0 auto; width: 56px; border-radius: 8px; border: none;
+    background-color: #222; color: #777; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; font-size: 12px; font-weight: 700;
+  }
+  .cover-btn i { font-size: 18px; pointer-events: none; }
+  .cover-btn.active { color: #f5c518; }
+
+  /* Ribbon sits top-left of the photo, opposite the delete button. */
+  .cover-ribbon {
+    position: absolute; top: 12px; left: 0; z-index: 6;
+    display: flex; align-items: center; gap: 6px;
+    background-color: #f5c518; color: #000; font-size: 12px; font-weight: 700;
+    padding: 5px 18px 5px 10px; pointer-events: none;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%);
+  }
+  .cover-ribbon[hidden] { display: none; }
+
   .vote-count {
     background-color: #222; padding: 10px 15px;
     border-radius: 8px; text-align: center; font-size: 14px;
@@ -180,6 +199,10 @@
       <i class="fa-solid fa-wand-magic-sparkles"></i> Ask Milo
     <% end %>
 
+    <%= link_to "/style", class: "nav-btn" do %>
+      <i class="fa-solid fa-palette"></i> Style
+    <% end %>
+
     <%= link_to "https://instagram.com", class: "nav-btn", target: "_blank" do %>
       <i class="fa-brands fa-instagram"></i> Ready to Post
     <% end %>
@@ -224,6 +247,7 @@
   <h2 class="feed-header"> Feed</h2>
 
   <% @polls.each do |poll| %>
+    <% cover_post = poll.cover_post %>
     <div class="photo-card" data-poll-id="<%= poll.id %>">
 
       <% if poll.user_id == current_user&.id %>
@@ -242,6 +266,9 @@
                   <%= image_tag post.image.url, class: "uploaded-image" %>
                 <% end %>
                 <% if poll.carousel? %>
+                  <div class="cover-ribbon" id="ribbon-<%= post.id %>" <%= "hidden" unless cover_post == post %>>
+                    <i class="fa-solid fa-star"></i> Cover
+                  </div>
                   <% unless post == poll.posts.first %>
                     <button type="button" class="carousel-arrow prev" onclick="scrollCarousel(this, -1)" aria-label="Previous photo">
                       <i class="fa-solid fa-chevron-left"></i>
@@ -260,6 +287,14 @@
                 <div class="vote-buttons">
                   <button class="vote-btn vote-yes" onclick="vote(<%= post.id %>, 'yes')"></button>
                   <button class="vote-btn vote-no" onclick="vote(<%= post.id %>, 'no')"></button>
+                  <% if poll.carousel? %>
+                    <button type="button" class="cover-btn <%= "active" if post.covered_by?(current_user) %>"
+                            id="cover-btn-<%= post.id %>" onclick="pickCover(<%= post.id %>)"
+                            aria-label="Pick as cover" title="Pick as cover">
+                      <i class="fa-solid fa-star"></i>
+                      <span id="cover-count-<%= post.id %>"><%= post.cover_votes_count %></span>
+                    </button>
+                  <% end %>
                 </div>
 
                 <div class="vote-count">
@@ -333,6 +368,34 @@
         data.user_vote ? `You voted ${data.user_vote === 'yes' ? '✅' : '❌'}` : '';
     } catch (err) {
       alert("Vote failed — try again.");
+    }
+  }
+
+  async function pickCover(postId) {
+    try {
+      const response = await fetch(`/posts/${postId}/cover`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({})
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+
+      Object.entries(data.counts).forEach(([id, count]) => {
+        const postKey = Number(id);
+        document.getElementById(`cover-count-${id}`).textContent = count;
+        document.getElementById(`cover-btn-${id}`).classList.toggle('active', postKey === data.my_pick_post_id);
+        document.getElementById(`ribbon-${id}`).hidden = postKey !== data.cover_post_id;
+      });
+    } catch (err) {
+      alert("Couldn't save your cover pick — try again.");
     }
   }
 

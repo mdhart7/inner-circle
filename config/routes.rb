@@ -12,8 +12,12 @@ Rails.application.routes.draw do
   delete "/stylist/clear",   to: "stylist#clear", as: :stylist_clear
 
   post "/posts/:id/vote", to: "posts#vote", as: :vote_post
+  post "/posts/:id/cover", to: "posts#cover", as: :cover_post
 
   get "/circle", to: "circles#index", as: :circle
+
+  get  "/style", to: "style_profiles#show"
+  post "/style", to: "style_profiles#update", as: :style_profile
 
   resources :circle_members, only: [ :create, :destroy ] do
     member do

@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, only: [ :create, :update, :destroy, :vote ]
+  before_action :authenticate_user!, only: [ :create, :update, :destroy, :vote, :cover ]
   before_action :set_post, only: [ :update, :destroy ]
 
   def index
@@ -62,7 +62,44 @@ class PostsController < ApplicationController
     end
   end
 
+  # Star a photo as the "cover" pick for its set. One pick per person per set:
+  # starring another photo moves the pick, starring the same one removes it.
+  def cover
+    post = Post.find(params[:id])
+    poll = post.poll
+
+    unless poll&.carousel? && can_see_poll?(poll)
+      return render json: { error: "Cover picks are only available on photo sets you can see." }, status: :forbidden
+    end
+
+    existing = poll.cover_votes.find_by(user_id: current_user.id)
+
+    if existing&.post_id == post.id
+      existing.destroy
+    elsif existing
+      existing.update!(post: post)
+    else
+      poll.cover_votes.create!(post: post, user: current_user)
+    end
+
+    render json: cover_payload(Poll.includes(posts: :cover_votes).find(poll.id))
+  end
+
   private
+
+  def can_see_poll?(poll)
+    poll.user_id == current_user.id || current_user.circle_friends_ids.include?(poll.user_id)
+  end
+
+  def cover_payload(poll)
+    my_pick = poll.posts.find { |post| post.covered_by?(current_user) }
+
+    {
+      cover_post_id: poll.cover_post&.id,
+      my_pick_post_id: my_pick&.id,
+      counts: poll.posts.to_h { |post| [ post.id, post.cover_votes_count ] }
+    }
+  end
 
   def set_post
     @post = current_user.posts.find_by(id: params[:id])

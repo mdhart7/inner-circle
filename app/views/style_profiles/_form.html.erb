@@ -1,0 +1,56 @@
+<%= form_with url: "/style", method: :post, local: true do %>
+  <div class="style-box">
+    <fieldset class="qfield">
+      <legend>What's your skin's undertone?</legend>
+      <p class="qhelp">Not sure? Look at the veins on your wrist in natural light: greenish leans warm, bluish leans cool, and a mix of both is neutral.</p>
+      <div class="qoptions">
+        <% StyleProfile::UNDERTONES.each do |option| %>
+          <label class="qoption">
+            <input type="radio" name="undertone" value="<%= option %>"
+                   <%= "checked" if style_profile.undertone == option %> required>
+            <%= option.capitalize %>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <fieldset class="qfield">
+      <legend>How much contrast is there between your hair and skin?</legend>
+      <p class="qhelp">Dark hair with much lighter skin (or the reverse) is high contrast. Hair and skin closer in depth to each other is soft contrast.</p>
+      <div class="qoptions">
+        <label class="qoption">
+          <input type="radio" name="contrast" value="high" <%= "checked" if style_profile.contrast == "high" %> required>
+          High contrast
+        </label>
+        <label class="qoption">
+          <input type="radio" name="contrast" value="soft" <%= "checked" if style_profile.contrast == "soft" %>>
+          Soft contrast
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="qfield">
+      <legend>Eye color</legend>
+      <select name="eye_color" class="style-select">
+        <option value="">Prefer not to say</option>
+        <% StyleProfile::EYE_COLORS.each do |option| %>
+          <option value="<%= option %>" <%= "selected" if style_profile.eye_color == option %>><%= option.capitalize %></option>
+        <% end %>
+      </select>
+    </fieldset>
+
+    <fieldset class="qfield">
+      <legend>Hair color</legend>
+      <select name="hair_color" class="style-select">
+        <option value="">Prefer not to say</option>
+        <% StyleProfile::HAIR_COLORS.each do |option| %>
+          <option value="<%= option %>" <%= "selected" if style_profile.hair_color == option %>><%= option.capitalize %></option>
+        <% end %>
+      </select>
+    </fieldset>
+
+    <button type="submit" class="style-submit-btn">
+      <%= style_profile.persisted? ? "Update my palette" : "Get my palette" %>
+    </button>
+  </div>
+<% end %>

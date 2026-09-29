@@ -4,6 +4,8 @@ class User < ApplicationRecord
 
   has_many :posts, dependent: :destroy
   has_many :polls, dependent: :destroy
+  has_many :cover_votes, dependent: :destroy
+  has_one :style_profile, dependent: :destroy
 
   has_many :circle_members, dependent: :destroy
   has_many :added_users, through: :circle_members, source: :member

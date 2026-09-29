@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_17_180000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_28_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_17_180000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_circles_on_user_id"
+  end
+
+  create_table "cover_votes", force: :cascade do |t|
+    t.bigint "poll_id", null: false
+    t.bigint "post_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["poll_id", "user_id"], name: "index_cover_votes_on_poll_id_and_user_id", unique: true
+    t.index ["post_id"], name: "index_cover_votes_on_post_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -200,6 +210,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_17_180000) do
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "style_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "undertone", null: false
+    t.string "contrast", null: false
+    t.string "eye_color"
+    t.string "hair_color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_style_profiles_on_user_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|

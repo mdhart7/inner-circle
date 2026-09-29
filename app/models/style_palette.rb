@@ -1,0 +1,190 @@
+# Turns a StyleProfile's questionnaire answers into a color palette, using
+# plain color-theory rules (undertone + contrast level) rather than AI.
+# No API calls, no cost — this is a lookup table.
+class StylePalette
+  Swatch = Struct.new(:name, :hex, :why, keyword_init: true)
+
+  BUCKETS = {
+    %w[warm high] => {
+      summary: "Warm undertone with high contrast between your hair, skin, and eyes — bold, richly saturated colors and strong dark/light pairings suit you best.",
+      lean_toward: [
+        Swatch.new(name: "Olive", hex: "#5E6B2F", why: "a warm green that reads sophisticated, not flat"),
+        Swatch.new(name: "Rust", hex: "#B7472A", why: "warm and grounded without being loud"),
+        Swatch.new(name: "Golden Camel", hex: "#B98B57", why: "the classic warm neutral that flatters warm skin"),
+        Swatch.new(name: "Deep Chocolate", hex: "#4A2C21", why: "reads richer on you than plain black"),
+        Swatch.new(name: "Burnt Orange", hex: "#C1622D", why: "high-contrast skin can carry a saturated warm color"),
+        Swatch.new(name: "Forest Green", hex: "#31502E", why: "deep enough to match your natural contrast")
+      ],
+      supporting: [
+        Swatch.new(name: "Ivory", hex: "#F5F0E1", why: nil),
+        Swatch.new(name: "Warm Charcoal", hex: "#3A3530", why: nil),
+        Swatch.new(name: "Chocolate Brown", hex: "#4A2C21", why: nil),
+        Swatch.new(name: "Camel", hex: "#C19A6B", why: nil)
+      ],
+      lean_away: [
+        Swatch.new(name: "Icy Pastel Blue", hex: "#BFD9E8", why: "fights a warm undertone"),
+        Swatch.new(name: "Cool Fuchsia", hex: "#C9469E", why: "too cool against warm skin"),
+        Swatch.new(name: "Stark Cool Gray", hex: "#9AA0A6", why: "reads flat next to high contrast"),
+        Swatch.new(name: "Icy Lavender", hex: "#D6D2E8", why: "washes out warm coloring")
+      ]
+    },
+    %w[warm soft] => {
+      summary: "Warm undertone with softer, closer-in-depth contrast — muted, blended, tonal colors suit you better than stark combinations.",
+      lean_toward: [
+        Swatch.new(name: "Soft Camel", hex: "#C9A876", why: "warm without demanding attention"),
+        Swatch.new(name: "Warm Sand", hex: "#D6BE9C", why: "close enough in depth to blend, not clash"),
+        Swatch.new(name: "Muted Olive", hex: "#7C7A4E", why: "a softer, dustier take on olive"),
+        Swatch.new(name: "Dusty Terracotta", hex: "#C08262", why: "warm, but gentler than saturated rust"),
+        Swatch.new(name: "Warm Taupe", hex: "#A68A6D", why: "a warm neutral with low contrast"),
+        Swatch.new(name: "Honey Gold", hex: "#D6A552", why: "soft warmth, not brassy")
+      ],
+      supporting: [
+        Swatch.new(name: "Warm Ivory", hex: "#F2E9D8", why: nil),
+        Swatch.new(name: "Soft Chocolate", hex: "#6B4A3A", why: nil),
+        Swatch.new(name: "Warm Gray", hex: "#8A8172", why: nil),
+        Swatch.new(name: "Sand", hex: "#D9C7A8", why: nil)
+      ],
+      lean_away: [
+        Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend"),
+        Swatch.new(name: "Icy Cool Blue", hex: "#B7D3E0", why: "fights the warm undertone"),
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "overwhelms a low-contrast palette"),
+        Swatch.new(name: "Cool Charcoal", hex: "#3B3F44", why: "too stark next to soft coloring")
+      ]
+    },
+    %w[cool high] => {
+      summary: "Cool undertone with high contrast — clear, saturated jewel tones and crisp dark/light combinations suit you best.",
+      lean_toward: [
+        Swatch.new(name: "True Red", hex: "#B0202E", why: "a clean red with no orange in it"),
+        Swatch.new(name: "Sapphire Blue", hex: "#0F52BA", why: "cool and saturated enough to match your contrast"),
+        Swatch.new(name: "Emerald Green", hex: "#065535", why: "a jewel tone that reads sharp, not muddy"),
+        Swatch.new(name: "Charcoal / Black", hex: "#1C1C1C", why: "classic high-contrast neutral"),
+        Swatch.new(name: "Fuchsia", hex: "#C71585", why: "bold cool color, well-suited to strong contrast"),
+        Swatch.new(name: "Icy White", hex: "#F4F6F7", why: "crisp rather than warm-toned cream")
+      ],
+      supporting: [
+        Swatch.new(name: "Pure White", hex: "#FFFFFF", why: nil),
+        Swatch.new(name: "Charcoal Gray", hex: "#36454F", why: nil),
+        Swatch.new(name: "Navy", hex: "#14213D", why: nil),
+        Swatch.new(name: "Silver", hex: "#C0C0C0", why: nil)
+      ],
+      lean_away: [
+        Swatch.new(name: "Rust / Orange", hex: "#C1622D", why: "too warm for cool undertones"),
+        Swatch.new(name: "Golden Camel", hex: "#C19A6B", why: "warm neutral fights cool skin"),
+        Swatch.new(name: "Golden Yellow", hex: "#E8B923", why: "reads sallow against cool skin"),
+        Swatch.new(name: "Warm Beige", hex: "#D8C3A5", why: "too warm-neutral for you")
+      ]
+    },
+    %w[cool soft] => {
+      summary: "Cool undertone with softer contrast — muted, dusty, tonal cool colors suit you better than stark saturated ones.",
+      lean_toward: [
+        Swatch.new(name: "Powder Blue", hex: "#A9C4D9", why: "cool and gentle, matches soft contrast"),
+        Swatch.new(name: "Dusty Rose", hex: "#C08497", why: "a muted cool pink, not a bright one"),
+        Swatch.new(name: "Soft Lavender", hex: "#B9A6CC", why: "cool without being harsh"),
+        Swatch.new(name: "Slate Gray", hex: "#6E7A82", why: "a blended cool neutral"),
+        Swatch.new(name: "Muted Teal", hex: "#4C8C8A", why: "cool, but dialed down from bright jewel tones"),
+        Swatch.new(name: "Cool Taupe", hex: "#9C9186", why: "low-contrast cool neutral")
+      ],
+      supporting: [
+        Swatch.new(name: "Soft White", hex: "#F1F3F4", why: nil),
+        Swatch.new(name: "Cool Gray", hex: "#8B8D8E", why: nil),
+        Swatch.new(name: "Soft Navy", hex: "#2C3E56", why: nil),
+        Swatch.new(name: "Dove Gray", hex: "#A9A9AB", why: nil)
+      ],
+      lean_away: [
+        Swatch.new(name: "Bright Orange", hex: "#D2601A", why: "too warm and too bold"),
+        Swatch.new(name: "Golden Yellow", hex: "#E8B923", why: "warm and saturated, fights soft cool coloring"),
+        Swatch.new(name: "Warm Camel", hex: "#C19A6B", why: "too warm for cool undertones"),
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too much contrast for a soft palette")
+      ]
+    },
+    %w[neutral high] => {
+      summary: "Neutral undertone with high contrast — colors that aren't strongly warm or cool, worn boldly, suit you best.",
+      lean_toward: [
+        Swatch.new(name: "Navy", hex: "#1F2A44", why: "a balanced dark that works on neutral skin"),
+        Swatch.new(name: "Charcoal", hex: "#333333", why: "strong neutral for high contrast"),
+        Swatch.new(name: "Deep Teal", hex: "#1B4B4B", why: "balanced between warm and cool"),
+        Swatch.new(name: "Burgundy", hex: "#722F37", why: "reads rich without leaning too warm or cool"),
+        Swatch.new(name: "Balanced Olive", hex: "#6B7047", why: "neither strongly warm nor cool"),
+        Swatch.new(name: "Greige", hex: "#A99C8B", why: "a gray-camel blend built for neutral undertones")
+      ],
+      supporting: [
+        Swatch.new(name: "White", hex: "#FFFFFF", why: nil),
+        Swatch.new(name: "Black", hex: "#111111", why: nil),
+        Swatch.new(name: "Mid Gray", hex: "#808080", why: nil),
+        Swatch.new(name: "Stone", hex: "#B5AA9A", why: nil)
+      ],
+      lean_away: [
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature"),
+        Swatch.new(name: "Very Warm Orange", hex: "#D2601A", why: "pushes past your balanced undertone"),
+        Swatch.new(name: "Icy Pastel Blue", hex: "#BFD9E8", why: "pushes too far cool"),
+        Swatch.new(name: "Overly Warm Gold", hex: "#D4AF37", why: "too warm-leaning for neutral skin")
+      ]
+    },
+    %w[neutral soft] => {
+      summary: "Neutral undertone with softer contrast — muted, blended tones that aren't strongly warm or cool suit you best.",
+      lean_toward: [
+        Swatch.new(name: "Soft Navy", hex: "#39496B", why: "balanced and gentle"),
+        Swatch.new(name: "Dusty Teal", hex: "#5C8A89", why: "neither warm nor cool, softened"),
+        Swatch.new(name: "Mushroom", hex: "#B2A296", why: "a muted neutral built for soft contrast"),
+        Swatch.new(name: "Soft Burgundy", hex: "#8C5766", why: "rich but not overpowering"),
+        Swatch.new(name: "Muted Sage", hex: "#9CAF88", why: "balanced green, softened"),
+        Swatch.new(name: "Warm Gray", hex: "#948C7E", why: "gentle neutral with a touch of warmth")
+      ],
+      supporting: [
+        Swatch.new(name: "Soft White", hex: "#F1EFEA", why: nil),
+        Swatch.new(name: "Stone", hex: "#B5AA9A", why: nil),
+        Swatch.new(name: "Taupe", hex: "#9B8F80", why: nil),
+        Swatch.new(name: "Mid Gray", hex: "#8F8F8F", why: nil)
+      ],
+      lean_away: [
+        Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for soft coloring"),
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "overwhelms a muted, blended palette"),
+        Swatch.new(name: "Very Warm Orange", hex: "#D2601A", why: "too warm and too bold"),
+        Swatch.new(name: "Icy Blue", hex: "#B7D3E0", why: "too cool and too stark")
+      ]
+    }
+  }.freeze
+
+  EYE_LINES = {
+    "brown" => "Brown eyes work with almost anything you wear — warm golds and rich browns tend to deepen them.",
+    "hazel" => "Hazel eyes shift with what's near them — olive and gold bring out the warm flecks, while deep green or brown brings out the cooler ring.",
+    "green" => "Green eyes get a lift from burgundy, copper, and warm browns, which sit opposite green on the color wheel.",
+    "blue" => "Blue eyes stand out most next to warm oranges, rust, and camel, or navy for a tonal look.",
+    "gray" => "Gray eyes pick up whatever's nearby — richer jewel tones tend to bring out the most color.",
+    "amber" => "Amber eyes pair naturally with warm greens, olive, and gold, which echo their own warmth."
+  }.freeze
+
+  attr_reader :profile
+
+  def self.for(profile)
+    new(profile)
+  end
+
+  def initialize(profile)
+    @profile = profile
+  end
+
+  def bucket
+    BUCKETS.fetch([ profile.undertone, profile.contrast ])
+  end
+
+  def summary
+    bucket[:summary]
+  end
+
+  def eye_line
+    EYE_LINES[profile.eye_color]
+  end
+
+  def lean_toward
+    bucket[:lean_toward]
+  end
+
+  def supporting
+    bucket[:supporting]
+  end
+
+  def lean_away
+    bucket[:lean_away]
+  end
+end
