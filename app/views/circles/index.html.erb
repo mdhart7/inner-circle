@@ -65,6 +65,29 @@
   font-size: 20px;
 }
 
+.circle-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.circle-back-link:hover,
+.circle-back-link:focus-visible {
+  background: #222;
+  border-color: #00bfff;
+  color: #fff;
+}
+
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -136,7 +159,7 @@
 
 
 <div class="inner-container">
-  <%= link_to root_path, class: "nav-btn" do %>
+  <%= link_to root_path, class: "circle-back-link" do %>
     <i class="fa-solid fa-arrow-left"></i> Back to Feed
   <% end %>
 
