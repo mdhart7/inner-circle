@@ -1,0 +1,112 @@
+<style>
+  .nav-bar {
+    display: flex; justify-content: flex-start; align-items: center;
+    padding: 20px; border-bottom: 1px solid #333; background-color: #000;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-btn { background: none; border: none; color: #999; cursor: pointer; font-size: 14px; text-decoration: none; }
+  .nav-btn:hover { color: #fff; }
+
+  .inner-container { max-width: 600px; margin: 0 auto; padding: 20px; }
+  .page-title { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .page-subtitle { color: #999; margin-bottom: 25px; }
+
+  .rtp-card {
+    background: #111; border: 1px solid #333; border-radius: 20px;
+    padding: 16px; margin-bottom: 20px;
+  }
+  .rtp-image { width: 100%; border-radius: 14px; display: block; margin-bottom: 12px; }
+  .rtp-meta { color: #888; font-size: 13px; margin-bottom: 12px; }
+  .rtp-btn {
+    width: 100%; padding: 14px; border-radius: 12px; border: none;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: #fff; font-weight: 700; font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .rtp-btn:disabled { opacity: 0.6; cursor: default; }
+  .rtp-fallback { display: none; gap: 8px; margin-top: 10px; }
+  .rtp-fallback.show { display: flex; }
+  .rtp-fallback a, .rtp-fallback button {
+    flex: 1; text-align: center; padding: 12px; border-radius: 12px;
+    background: #1a1a1a; border: 1px solid #444; color: #fff; text-decoration: none;
+    font-size: 14px; cursor: pointer;
+  }
+  .rtp-status { font-size: 13px; color: #888; margin-top: 8px; min-height: 16px; }
+  .rtp-empty { color: #888; text-align: center; padding: 40px 0; }
+</style>
+
+<div class="nav-bar">
+  <%= link_to root_path, class: "nav-btn" do %>
+    <i class="fa-solid fa-arrow-left"></i> Back to Feed
+  <% end %>
+</div>
+
+<div class="inner-container">
+  <h1 class="page-title">Ready to Post</h1>
+  <p class="page-subtitle">Share your circle's pick straight to Instagram. If a cover photo's been chosen, that's what gets shared — otherwise it's the first photo.</p>
+
+  <% if @my_polls.present? %>
+    <% @my_polls.each do |poll| %>
+      <% post = poll.share_post %>
+      <% next unless post&.image&.present? %>
+      <div class="rtp-card">
+        <img src="<%= post.image.url %>" alt="" class="rtp-image">
+        <div class="rtp-meta">
+          <%= pluralize(poll.posts.size, "photo") %>
+          <%= poll.cover_post ? "· cover photo picked by your circle" : "· no cover pick yet, sharing the first photo" %>
+        </div>
+
+        <button type="button" class="rtp-btn" data-image-url="<%= post.image.url %>" onclick="shareToInstagram(this)">
+          <i class="fa-brands fa-instagram"></i> Share to Instagram
+        </button>
+        <div class="rtp-fallback">
+          <a href="<%= post.image.url %>" download target="_blank" rel="noopener">Download photo</a>
+          <a href="instagram://app" onclick="setTimeout(() => window.location.href = 'https://instagram.com', 800)">Open Instagram</a>
+        </div>
+        <div class="rtp-status"></div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="rtp-empty">Post something to your circle first, then come back here to share it.</p>
+  <% end %>
+</div>
+
+<script>
+  async function shareToInstagram(button) {
+    const card = button.closest('.rtp-card');
+    const status = card.querySelector('.rtp-status');
+    const fallback = card.querySelector('.rtp-fallback');
+    const imageUrl = button.dataset.imageUrl;
+
+    button.disabled = true;
+    status.textContent = 'Preparing photo…';
+
+    try {
+      const response = await fetch(imageUrl, { mode: 'cors' });
+      if (!response.ok) throw new Error('fetch failed');
+      const blob = await response.blob();
+      const file = new File([blob], 'inner-circl-photo.jpg', { type: blob.type || 'image/jpeg' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Inner Circl pick',
+          text: 'What my circle picked'
+        });
+        status.textContent = '';
+      } else {
+        status.textContent = "Your browser can't share photos directly — download it below, then open Instagram and post it from your camera roll.";
+        fallback.classList.add('show');
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') {
+        status.textContent = '';
+      } else {
+        status.textContent = "Couldn't open the share sheet — download the photo below instead.";
+        fallback.classList.add('show');
+      }
+    } finally {
+      button.disabled = false;
+    }
+  }
+</script>

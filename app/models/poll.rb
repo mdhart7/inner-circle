@@ -21,4 +21,10 @@ class Poll < ApplicationRecord
   def top_posts(limit = 3)
     posts.sort_by { |post| [ -post.yes_votes_count, post.no_votes_count, post.position ] }.first(limit)
   end
+
+  # The photo to hand off when sharing this set: whichever the circle
+  # picked as cover, or just the first photo if no one's picked yet.
+  def share_post
+    cover_post || posts.first
+  end
 end

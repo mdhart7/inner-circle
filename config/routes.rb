@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   get "/circle", to: "circles#index", as: :circle
 
+  get "/ready-to-post", to: "ready_to_post#index", as: :ready_to_post
+
   get  "/style", to: "style_profiles#show"
   post "/style", to: "style_profiles#update", as: :style_profile
 
