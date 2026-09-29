@@ -83,12 +83,15 @@
       </div>
 
       <h3>Lean toward</h3>
+      <% if palette.lean_toward_intro %>
+        <p class="page-subtitle"><%= palette.lean_toward_intro %></p>
+      <% end %>
       <div class="swatch-grid">
-        <% palette.lean_toward.each do |s| %>
+        <% palette.lean_toward.each_with_index do |s, i| %>
           <div class="swatch">
             <div class="fill" style="background: <%= s.hex %>;"></div>
             <div class="body">
-              <b><%= s.name %></b>
+              <b><%= i + 1 %>. <%= s.name %></b>
               <span class="hex"><%= s.hex %></span>
               <p class="why"><%= s.why %></p>
             </div>
@@ -107,13 +110,20 @@
       </div>
 
       <h3>Lean away</h3>
+      <% if palette.lean_away_intro %>
+        <p class="page-subtitle"><%= palette.lean_away_intro %></p>
+      <% end %>
       <div class="swatch-grid">
         <% palette.lean_away.each do |s| %>
           <div class="swatch">
-            <div class="fill" style="background: <%= s.hex %>;"></div>
+            <% if s.hex %>
+              <div class="fill" style="background: <%= s.hex %>;"></div>
+            <% end %>
             <div class="body">
               <b><%= s.name %></b>
-              <span class="hex"><%= s.hex %></span>
+              <% if s.hex %>
+                <span class="hex"><%= s.hex %></span>
+              <% end %>
               <p class="why"><%= s.why %></p>
             </div>
           </div>

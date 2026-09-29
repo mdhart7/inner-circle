@@ -145,6 +145,39 @@ class StylePalette
     }
   }.freeze
 
+  # Hand-written palettes for specific (undertone, contrast, eye_color)
+  # combinations, richer than the generic buckets above. Checked first;
+  # anyone whose exact three answers match gets this instead of the
+  # generic bucket for their undertone/contrast pair.
+  EYE_OVERRIDES = {
+    [ "warm", "soft", "hazel" ] => {
+      summary: "Warm-golden skin with hazel eyes: amber and gold near the pupil, brown-green on the outer ring. That means warm versions of every color work, and green plus gold are the two hues your eyes can echo.",
+      lean_toward_intro: "Ranked. Olive first because it pulls the green out of your eyes.",
+      lean_toward: [
+        Swatch.new(name: "Olive / moss", hex: "#5E6B2F", why: "Echoes the green flecks in your eyes. Your strongest color."),
+        Swatch.new(name: "Burgundy / wine", hex: "#6E1F2F", why: "Red sits opposite green on the wheel, so it makes hazel eyes pop."),
+        Swatch.new(name: "Camel / rust", hex: "#B98B57", why: "Echoes the gold in your eyes and lifts golden skin."),
+        Swatch.new(name: "Chocolate brown", hex: "#4A2C21", why: "Warm and deep."),
+        Swatch.new(name: "Navy", hex: "#1F2A44", why: "Your best cool color. Pick ink navy over bright royal blue.")
+      ],
+      supporting: [
+        Swatch.new(name: "Warm cream", hex: "#F1E8D6", why: "Use instead of stark white."),
+        Swatch.new(name: "Warm sand", hex: "#CDBB9B", why: "Only when it leans yellow, not gray."),
+        Swatch.new(name: "Warm charcoal", hex: "#3B3733", why: "The gray that works for you."),
+        Swatch.new(name: "Black", hex: "#141210", why: "Strong contrast and good with every best color."),
+        Swatch.new(name: "Amber / mustard", hex: "#C68A1E", why: "Small doses: a bag, socks, a lens tint."),
+        Swatch.new(name: "Gold", hex: "#C8A24A", why: "Hardware, chains, watch details.")
+      ],
+      lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
+      lean_away: [
+        Swatch.new(name: "Pastels", hex: nil, why: "Baby blue, blush, mint. Low saturation washes out warm skin."),
+        Swatch.new(name: "Muddy and dull", hex: nil, why: "Gray-olive, dusty mauve, taupe-gray. They read flat."),
+        Swatch.new(name: "Neon", hex: nil, why: "Synthetic brights compete with your skin instead of complementing it."),
+        Swatch.new(name: "Cool gray and icy white", hex: nil, why: "Ashy against warm undertones. Switch to warm charcoal or cream.")
+      ]
+    }
+  }.freeze
+
   EYE_LINES = {
     "brown" => "Brown eyes work with almost anything you wear — warm golds and rich browns tend to deepen them.",
     "hazel" => "Hazel eyes shift with what's near them — olive and gold bring out the warm flecks, while deep green or brown brings out the cooler ring.",
@@ -168,23 +201,44 @@ class StylePalette
     BUCKETS.fetch([ profile.undertone, profile.contrast ])
   end
 
-  def summary
-    bucket[:summary]
+  # Present only when this exact (undertone, contrast, eye_color) has a
+  # hand-written override; nil for every other combination.
+  def override
+    EYE_OVERRIDES[[ profile.undertone, profile.contrast, profile.eye_color ]]
   end
 
+  def summary
+    override ? override[:summary] : bucket[:summary]
+  end
+
+  # Only set when an override provides one; the generic buckets don't
+  # have a ranking rationale, only individual reasons per swatch.
+  def lean_toward_intro
+    override && override[:lean_toward_intro]
+  end
+
+  def lean_away_intro
+    override && override[:lean_away_intro]
+  end
+
+  # nil for overrides that already fold the eye color into every
+  # swatch's own reasoning, so the generic one-line summary would be
+  # redundant.
   def eye_line
+    return nil if override
+
     EYE_LINES[profile.eye_color]
   end
 
   def lean_toward
-    bucket[:lean_toward]
+    override ? override[:lean_toward] : bucket[:lean_toward]
   end
 
   def supporting
-    bucket[:supporting]
+    override ? override[:supporting] : bucket[:supporting]
   end
 
   def lean_away
-    bucket[:lean_away]
+    override ? override[:lean_away] : bucket[:lean_away]
   end
 end
