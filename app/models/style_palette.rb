@@ -170,10 +170,10 @@ class StylePalette
       ],
       lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
       lean_away: [
-        Swatch.new(name: "Pastels", hex: nil, why: "Baby blue, blush, mint. Low saturation washes out warm skin."),
-        Swatch.new(name: "Muddy and dull", hex: nil, why: "Gray-olive, dusty mauve, taupe-gray. They read flat."),
-        Swatch.new(name: "Neon", hex: nil, why: "Synthetic brights compete with your skin instead of complementing it."),
-        Swatch.new(name: "Cool gray and icy white", hex: nil, why: "Ashy against warm undertones. Switch to warm charcoal or cream.")
+        Swatch.new(name: "Pastels", hex: "#BFD9E8", why: "Baby blue, blush, mint. Low saturation washes out warm skin."),
+        Swatch.new(name: "Muddy and dull", hex: "#8A8172", why: "Gray-olive, dusty mauve, taupe-gray. They read flat."),
+        Swatch.new(name: "Neon", hex: "#39FF14", why: "Synthetic brights compete with your skin instead of complementing it."),
+        Swatch.new(name: "Cool gray and icy white", hex: "#D9DEE2", why: "Ashy against warm undertones. Switch to warm charcoal or cream.")
       ]
     }
   }.freeze
