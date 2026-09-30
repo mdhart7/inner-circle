@@ -61,6 +61,12 @@
   .combination-body { padding: 10px; font-size: 13px; }
   .combination-names { font-weight: 700; }
   .combination-why { color: #aaa; margin-top: 5px; }
+  .metal-preference { margin: 14px 0 24px; }
+  .metal-bar { display: flex; width: 100%; height: 36px; overflow: hidden; border: 1px solid #444; border-radius: 10px; }
+  .metal-bar-gold, .metal-bar-silver { display: flex; align-items: center; justify-content: center; color: #111; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .metal-bar-gold { background: #C8A24A; }
+  .metal-bar-silver { background: #C0C3C7; }
+  .metal-caption { color: #aaa; font-size: 13px; margin-top: 7px; }
   .outfit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 14px; }
   .outfit-card { overflow: hidden; border: 1px solid #333; border-radius: 14px; background: #1a1a1a; }
   .outfit-swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -115,9 +121,9 @@
         <% end %>
       </div>
 
-      <h3>Supporting neutrals</h3>
+      <h3>Accent colors</h3>
       <div class="swatch-grid">
-        <% palette.supporting.each do |s| %>
+        <% palette.accent_colors.each do |s| %>
           <div class="swatch">
             <div class="fill" style="background: <%= s.hex %>;"></div>
             <div class="body"><b><%= s.name %></b><span class="hex"><%= s.hex %></span></div>
@@ -125,16 +131,35 @@
         <% end %>
       </div>
 
+      <% gold_percentage = palette.gold_metal_percentage %>
+      <% silver_percentage = 100 - gold_percentage %>
+      <h3>Jewelry metals</h3>
+      <div class="metal-preference">
+        <div class="metal-bar" role="img" aria-label="<%= palette.metal_preference %>">
+          <% if gold_percentage.positive? %>
+            <div class="metal-bar-gold" style="width: <%= gold_percentage %>%;">
+              <%= "Gold #{gold_percentage}%" if gold_percentage > 0 %>
+            </div>
+          <% end %>
+          <% if silver_percentage.positive? %>
+            <div class="metal-bar-silver" style="width: <%= silver_percentage %>%;">
+              <%= "Silver #{silver_percentage}%" if silver_percentage > 0 %>
+            </div>
+          <% end %>
+        </div>
+        <p class="metal-caption"><%= palette.metal_preference %> based on your undertone.</p>
+      </div>
+
       <h3>Top color combinations</h3>
       <div class="combination-grid">
         <% palette.color_combinations.each do |combination| %>
           <div class="combination-card">
-            <div class="combination-colors" aria-label="<%= "#{combination.primary.name} and #{combination.supporting.name}" %>">
+            <div class="combination-colors" aria-label="<%= "#{combination.primary.name} and #{combination.accent.name}" %>">
               <div style="background: <%= combination.primary.hex %>;"></div>
-              <div style="background: <%= combination.supporting.hex %>;"></div>
+              <div style="background: <%= combination.accent.hex %>;"></div>
             </div>
             <div class="combination-body">
-              <div class="combination-names"><%= combination.primary.name %> + <%= combination.supporting.name %></div>
+              <div class="combination-names"><%= combination.primary.name %> + <%= combination.accent.name %></div>
               <p class="combination-why"><%= combination.why %></p>
             </div>
           </div>
@@ -162,13 +187,13 @@
         <% end %>
       </div>
 
-      <h3>Top-to-toe outfits</h3>
+      <h3>Head-to-toe outfits</h3>
       <p class="page-subtitle">Four head-to-toe combinations picked for your coloring.</p>
       <div class="outfit-grid">
         <% palette.outfit_combinations.each_with_index do |outfit, index| %>
           <div class="outfit-card">
             <div class="outfit-swatches">
-              <% [ [ "Top", outfit[:top] ], [ "Pants", outfit[:bottom] ], [ "Shoes", outfit[:shoes] ] ].each do |label, swatch| %>
+              <% [ [ "Top", outfit.top ], [ "Pants", outfit.bottom ], [ "Shoes", outfit.shoes ] ].each do |label, swatch| %>
                 <div class="outfit-color">
                   <div class="outfit-color-fill" style="background: <%= swatch.hex %>;" aria-label="<%= "#{label}: #{swatch.name}" %>"></div>
                   <div class="outfit-color-info">
@@ -178,7 +203,7 @@
                 </div>
               <% end %>
             </div>
-            <p class="outfit-why"><strong>Look <%= index + 1 %>:</strong> <%= outfit[:why] %></p>
+            <p class="outfit-why"><strong>Look <%= index + 1 %>:</strong> <%= outfit.why %></p>
           </div>
         <% end %>
       </div>
