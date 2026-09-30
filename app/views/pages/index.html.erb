@@ -13,16 +13,22 @@
     padding: 20px; border-bottom: 1px solid #333;
     background-color: #000; position: sticky; top: 0; z-index: 100;
   }
-  .nav-links { display: flex; gap: 20px; align-items: center; }
+  .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
   .nav-btn {
     color: #999; text-decoration: none; font-size: 14px;
-    display: inline-flex; gap: 6px; align-items: center;
+    display: inline-flex; align-items: center; white-space: nowrap;
   }
   .nav-btn:hover { color: #fff; }
 
   .login-btn {
     background-color: #00bfff; color: #000; padding: 8px 20px;
     border-radius: 6px; font-weight: 600; text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    .nav-bar { flex-wrap: wrap; gap: 14px; padding: 14px 16px; }
+    .nav-links { flex: 1 1 100%; gap: 12px 18px; }
+    .login-btn { margin-left: auto; }
   }
 
   .inner-container { max-width: 600px; margin: 20px auto; padding: 20px; }
@@ -188,23 +194,23 @@
 <div class="nav-bar">
   <div class="nav-links">
     <%= link_to root_path, class: "nav-btn" do %>
-      <i class="fa-solid fa-house"></i> Home
+      Home
     <% end %>
 
     <%= link_to circle_path, class: "nav-btn" do %>
-      <i class="fa-solid fa-users"></i> My Circle
+      My Circle
     <% end %>
 
     <%= link_to "/stylist", class: "nav-btn" do %>
-      <i class="fa-solid fa-wand-magic-sparkles"></i> Ask Milo
+      Ask Milo
     <% end %>
 
     <%= link_to "/style", class: "nav-btn" do %>
-      <i class="fa-solid fa-palette"></i> Style
+      Style
     <% end %>
 
     <%= link_to ready_to_post_path, class: "nav-btn" do %>
-      <i class="fa-brands fa-instagram"></i> Ready to Post
+      Ready to Post
     <% end %>
   </div>
 
