@@ -1,9 +1,14 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, only: [ :create, :update, :destroy, :vote, :cover ]
+  before_action :authenticate_user!, only: [ :show, :create, :update, :destroy, :vote, :cover ]
   before_action :set_post, only: [ :update, :destroy ]
 
   def index
     @posts = Post.order(created_at: :desc)
+  end
+
+  def show
+    @post = Post.includes(:user, :votes, comments: :user).find(params[:id])
+    return head :not_found unless can_see_post?(@post)
   end
 
   def create
@@ -45,7 +50,7 @@ class PostsController < ApplicationController
 
   def vote
     post = Post.find(params[:id])
-    return render json: { error: "Not authorized" }, status: :unauthorized unless current_user
+    return render json: { error: "Not authorized" }, status: :forbidden unless can_see_post?(post)
 
     vote = post.votes.find_or_initialize_by(user: current_user)
     vote.vote_type = params[:vote_type]

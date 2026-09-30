@@ -1,0 +1,163 @@
+<style>
+  .nav-bar {
+    display: flex; align-items: center; padding: 20px;
+    border-bottom: 1px solid #333; background: #000;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-btn { color: #999; font-size: 14px; text-decoration: none; }
+  .nav-btn:hover { color: #fff; }
+  .shared-post {
+    max-width: 600px; margin: 20px auto; padding: 20px;
+    background: #1a1a1a; border: 1px solid #222; border-radius: 12px;
+  }
+  .shared-post img { display: block; width: 100%; border-radius: 8px; }
+  .post-author { color: #aaa; margin-top: 14px; }
+  .vote-buttons { display: flex; gap: 10px; margin-top: 16px; }
+  .vote-btn {
+    flex: 1; padding: 14px; border: 0; border-radius: 8px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+  }
+  .vote-yes { background: #00ff00; color: #000; }
+  .vote-no { background: #ff0000; color: #fff; }
+  .vote-count { margin-top: 12px; color: #ddd; }
+  .vote-status { min-height: 20px; margin-top: 6px; color: #00bfff; }
+  .share-post-btn, .comment-submit {
+    margin-top: 12px; padding: 9px 14px; border: 1px solid #444;
+    border-radius: 8px; background: #222; color: #ddd; cursor: pointer;
+  }
+  .share-post-btn:hover, .comment-submit:hover { border-color: #00bfff; color: #fff; }
+  .comments-section { margin-top: 20px; }
+  .comments-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .comment { color: #ddd; font-size: 14px; }
+  .comment strong { color: #fff; }
+  .comment-form { display: flex; gap: 8px; }
+  .comment-input {
+    flex: 1; min-width: 0; padding: 10px; border: 1px solid #333;
+    border-radius: 8px; background: #222; color: #fff;
+  }
+</style>
+
+<div class="nav-bar">
+  <%= link_to root_path, class: "nav-btn" do %>
+    <i class="fa-solid fa-arrow-left"></i> Back to Feed
+  <% end %>
+</div>
+
+<main class="shared-post">
+  <% if @post.image.present? %>
+    <%= image_tag @post.image.url, alt: "Photo shared by #{@post.user.full_name}" %>
+  <% end %>
+  <div class="post-author">Posted by <%= @post.user.full_name %></div>
+
+  <div class="vote-buttons">
+    <button type="button" class="vote-btn vote-yes" onclick="voteOnPost('yes')">Yes</button>
+    <button type="button" class="vote-btn vote-no" onclick="voteOnPost('no')">No</button>
+  </div>
+  <div class="vote-count">
+    <strong id="total-votes"><%= @post.total_votes_count %></strong> votes:
+    <span id="yes-votes"><%= @post.yes_votes_count %></span> yes ·
+    <span id="no-votes"><%= @post.no_votes_count %></span> no
+  </div>
+  <div id="vote-status" class="vote-status">
+    <% if (vote = @post.user_vote(current_user)) %>
+      You voted <%= vote.vote_type %>
+    <% end %>
+  </div>
+  <button type="button" class="share-post-btn" onclick="sharePost()">Share post</button>
+
+  <section class="comments-section">
+    <h2>Comments</h2>
+    <div class="comments-list" id="comments-list">
+      <% @post.comments.each do |comment| %>
+        <div class="comment"><strong><%= comment.user.full_name %>:</strong> <%= comment.body %></div>
+      <% end %>
+    </div>
+    <form class="comment-form" onsubmit="return addComment(event)">
+      <input type="text" class="comment-input" id="comment-input"
+             placeholder="Add a comment..." maxlength="300" required>
+      <button type="submit" class="comment-submit">Post</button>
+    </form>
+  </section>
+</main>
+
+<script>
+  async function sharePost() {
+    const url = window.location.href;
+    const shareData = {
+      title: "Inner Circl",
+      text: "Can you vote on this post?",
+      url
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        if (error.name === "AbortError") return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      alert("Post link copied. Send it to your friend so they can vote.");
+    } catch (_error) {
+      window.prompt("Copy this link to share the post:", url);
+    }
+  }
+
+  async function voteOnPost(voteType) {
+    try {
+      const response = await fetch("<%= vote_post_path(@post) %>", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ vote_type: voteType })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Vote failed");
+
+      document.getElementById("total-votes").textContent = data.total_count;
+      document.getElementById("yes-votes").textContent = data.yes_count;
+      document.getElementById("no-votes").textContent = data.no_count;
+      document.getElementById("vote-status").textContent = `You voted ${data.user_vote}`;
+    } catch (error) {
+      alert(error.message || "Vote failed — try again.");
+    }
+  }
+
+  async function addComment(event) {
+    event.preventDefault();
+    const input = document.getElementById("comment-input");
+    const body = input.value.trim();
+    if (!body) return false;
+
+    try {
+      const response = await fetch("<%= post_comments_path(@post) %>", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ body })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Comment failed");
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "comment";
+      const author = document.createElement("strong");
+      author.textContent = `${data.author}: `;
+      wrapper.appendChild(author);
+      wrapper.appendChild(document.createTextNode(data.body));
+      document.getElementById("comments-list").appendChild(wrapper);
+      input.value = "";
+    } catch (error) {
+      alert(error.message || "Comment failed — try again.");
+    }
+
+    return false;
+  }
+</script>

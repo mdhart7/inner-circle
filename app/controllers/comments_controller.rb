@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
 
   def create
     post = Post.find(params[:post_id])
+    return render json: { error: "Not authorized" }, status: :forbidden unless can_see_post?(post)
+
     comment = post.comments.build(user: current_user, body: params[:body])
 
     if comment.save

@@ -3,13 +3,17 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def after_sign_in_path_for(_resource)
-    root_path
+  def can_see_post?(post)
+    post.user_id == current_user.id || current_user.circle_friends_ids.include?(post.user_id)
+  end
+
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) || root_path
   end
 
   def after_sign_up_path_for(resource)
     complete_referral(resource, params[:ref])
-    root_path
+    stored_location_for(resource) || root_path
   end
 
   def after_sign_out_path_for(_resource_or_scope)
