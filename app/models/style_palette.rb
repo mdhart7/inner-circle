@@ -13,13 +13,19 @@ class StylePalette
         Swatch.new(name: "Golden Camel", hex: "#B98B57", why: "the classic warm neutral that flatters warm skin"),
         Swatch.new(name: "Deep Chocolate", hex: "#4A2C21", why: "reads richer on you than plain black"),
         Swatch.new(name: "Burnt Orange", hex: "#C1622D", why: "high-contrast skin can carry a saturated warm color"),
-        Swatch.new(name: "Forest Green", hex: "#31502E", why: "deep enough to match your natural contrast")
+        Swatch.new(name: "Forest Green", hex: "#31502E", why: "deep enough to match your natural contrast"),
+        Swatch.new(name: "Burgundy", hex: "#722F37", why: "a rich red that balances warm coloring"),
+        Swatch.new(name: "Deep Teal", hex: "#1B5B55", why: "adds saturated contrast without feeling icy")
       ],
       supporting: [
         Swatch.new(name: "Ivory", hex: "#F5F0E1", why: nil),
         Swatch.new(name: "Warm Charcoal", hex: "#3A3530", why: nil),
         Swatch.new(name: "Chocolate Brown", hex: "#4A2C21", why: nil),
-        Swatch.new(name: "Camel", hex: "#C19A6B", why: nil)
+        Swatch.new(name: "Camel", hex: "#C19A6B", why: nil),
+        Swatch.new(name: "Oatmeal", hex: "#D8C4A5", why: nil),
+        Swatch.new(name: "Espresso", hex: "#38251D", why: nil),
+        Swatch.new(name: "Olive", hex: "#5E6B2F", why: nil),
+        Swatch.new(name: "Warm Navy", hex: "#26384A", why: nil)
       ],
       lean_away: [
         Swatch.new(name: "Icy Pastel Blue", hex: "#BFD9E8", why: "fights a warm undertone"),
@@ -36,13 +42,19 @@ class StylePalette
         Swatch.new(name: "Muted Olive", hex: "#7C7A4E", why: "a softer, dustier take on olive"),
         Swatch.new(name: "Dusty Terracotta", hex: "#C08262", why: "warm, but gentler than saturated rust"),
         Swatch.new(name: "Warm Taupe", hex: "#A68A6D", why: "a warm neutral with low contrast"),
-        Swatch.new(name: "Honey Gold", hex: "#D6A552", why: "soft warmth, not brassy")
+        Swatch.new(name: "Honey Gold", hex: "#D6A552", why: "soft warmth, not brassy"),
+        Swatch.new(name: "Muted Peach", hex: "#D7A186", why: "a gentle warm accent that blends naturally"),
+        Swatch.new(name: "Soft Moss", hex: "#8C8B5A", why: "a quiet green that keeps the palette tonal")
       ],
       supporting: [
         Swatch.new(name: "Warm Ivory", hex: "#F2E9D8", why: nil),
         Swatch.new(name: "Soft Chocolate", hex: "#6B4A3A", why: nil),
         Swatch.new(name: "Warm Gray", hex: "#8A8172", why: nil),
-        Swatch.new(name: "Sand", hex: "#D9C7A8", why: nil)
+        Swatch.new(name: "Sand", hex: "#D9C7A8", why: nil),
+        Swatch.new(name: "Mushroom", hex: "#A99A87", why: nil),
+        Swatch.new(name: "Soft Olive", hex: "#89865D", why: nil),
+        Swatch.new(name: "Muted Clay", hex: "#B77F63", why: nil),
+        Swatch.new(name: "Warm Stone", hex: "#C2B39B", why: nil)
       ],
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend"),
@@ -59,13 +71,19 @@ class StylePalette
         Swatch.new(name: "Emerald Green", hex: "#065535", why: "a jewel tone that reads sharp, not muddy"),
         Swatch.new(name: "Charcoal / Black", hex: "#1C1C1C", why: "classic high-contrast neutral"),
         Swatch.new(name: "Fuchsia", hex: "#C71585", why: "bold cool color, well-suited to strong contrast"),
-        Swatch.new(name: "Icy White", hex: "#F4F6F7", why: "crisp rather than warm-toned cream")
+        Swatch.new(name: "Icy White", hex: "#F4F6F7", why: "crisp rather than warm-toned cream"),
+        Swatch.new(name: "Royal Purple", hex: "#5B2C83", why: "a clear jewel tone that holds its own"),
+        Swatch.new(name: "Cobalt", hex: "#0047AB", why: "a vivid cool blue that suits strong contrast")
       ],
       supporting: [
         Swatch.new(name: "Pure White", hex: "#FFFFFF", why: nil),
         Swatch.new(name: "Charcoal Gray", hex: "#36454F", why: nil),
         Swatch.new(name: "Navy", hex: "#14213D", why: nil),
-        Swatch.new(name: "Silver", hex: "#C0C0C0", why: nil)
+        Swatch.new(name: "Silver", hex: "#C0C0C0", why: nil),
+        Swatch.new(name: "Black", hex: "#111111", why: nil),
+        Swatch.new(name: "Icy Blue", hex: "#DDEAF1", why: nil),
+        Swatch.new(name: "Cool Plum", hex: "#56304A", why: nil),
+        Swatch.new(name: "Steel Gray", hex: "#717C87", why: nil)
       ],
       lean_away: [
         Swatch.new(name: "Rust / Orange", hex: "#C1622D", why: "too warm for cool undertones"),
@@ -82,13 +100,19 @@ class StylePalette
         Swatch.new(name: "Soft Lavender", hex: "#B9A6CC", why: "cool without being harsh"),
         Swatch.new(name: "Slate Gray", hex: "#6E7A82", why: "a blended cool neutral"),
         Swatch.new(name: "Muted Teal", hex: "#4C8C8A", why: "cool, but dialed down from bright jewel tones"),
-        Swatch.new(name: "Cool Taupe", hex: "#9C9186", why: "low-contrast cool neutral")
+        Swatch.new(name: "Cool Taupe", hex: "#9C9186", why: "low-contrast cool neutral"),
+        Swatch.new(name: "Mauve", hex: "#A77D91", why: "a dusty pink-purple that stays soft"),
+        Swatch.new(name: "Eucalyptus", hex: "#78928B", why: "a muted green with a cool cast")
       ],
       supporting: [
         Swatch.new(name: "Soft White", hex: "#F1F3F4", why: nil),
         Swatch.new(name: "Cool Gray", hex: "#8B8D8E", why: nil),
         Swatch.new(name: "Soft Navy", hex: "#2C3E56", why: nil),
-        Swatch.new(name: "Dove Gray", hex: "#A9A9AB", why: nil)
+        Swatch.new(name: "Dove Gray", hex: "#A9A9AB", why: nil),
+        Swatch.new(name: "Pale Lavender", hex: "#D5CBDD", why: nil),
+        Swatch.new(name: "Misty Blue", hex: "#BBCBD8", why: nil),
+        Swatch.new(name: "Cool Rose", hex: "#C89AA7", why: nil),
+        Swatch.new(name: "Soft Slate", hex: "#737D85", why: nil)
       ],
       lean_away: [
         Swatch.new(name: "Bright Orange", hex: "#D2601A", why: "too warm and too bold"),
@@ -105,13 +129,19 @@ class StylePalette
         Swatch.new(name: "Deep Teal", hex: "#1B4B4B", why: "balanced between warm and cool"),
         Swatch.new(name: "Burgundy", hex: "#722F37", why: "reads rich without leaning too warm or cool"),
         Swatch.new(name: "Balanced Olive", hex: "#6B7047", why: "neither strongly warm nor cool"),
-        Swatch.new(name: "Greige", hex: "#A99C8B", why: "a gray-camel blend built for neutral undertones")
+        Swatch.new(name: "Greige", hex: "#A99C8B", why: "a gray-camel blend built for neutral undertones"),
+        Swatch.new(name: "Jade", hex: "#2E7D6B", why: "a clear green that stays balanced"),
+        Swatch.new(name: "Plum", hex: "#713B59", why: "a bold but even-toned jewel color")
       ],
       supporting: [
         Swatch.new(name: "White", hex: "#FFFFFF", why: nil),
         Swatch.new(name: "Black", hex: "#111111", why: nil),
         Swatch.new(name: "Mid Gray", hex: "#808080", why: nil),
-        Swatch.new(name: "Stone", hex: "#B5AA9A", why: nil)
+        Swatch.new(name: "Stone", hex: "#B5AA9A", why: nil),
+        Swatch.new(name: "Navy", hex: "#1F2A44", why: nil),
+        Swatch.new(name: "Greige", hex: "#A99C8B", why: nil),
+        Swatch.new(name: "Silver", hex: "#BFC3C7", why: nil),
+        Swatch.new(name: "Deep Teal", hex: "#1B4B4B", why: nil)
       ],
       lean_away: [
         Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature"),
@@ -128,13 +158,19 @@ class StylePalette
         Swatch.new(name: "Mushroom", hex: "#B2A296", why: "a muted neutral built for soft contrast"),
         Swatch.new(name: "Soft Burgundy", hex: "#8C5766", why: "rich but not overpowering"),
         Swatch.new(name: "Muted Sage", hex: "#9CAF88", why: "balanced green, softened"),
-        Swatch.new(name: "Warm Gray", hex: "#948C7E", why: "gentle neutral with a touch of warmth")
+        Swatch.new(name: "Warm Gray", hex: "#948C7E", why: "gentle neutral with a touch of warmth"),
+        Swatch.new(name: "Dusty Blue", hex: "#8299AA", why: "a softened blue with balanced undertones"),
+        Swatch.new(name: "Muted Rose", hex: "#B9858B", why: "a gentle warm-cool blend")
       ],
       supporting: [
         Swatch.new(name: "Soft White", hex: "#F1EFEA", why: nil),
         Swatch.new(name: "Stone", hex: "#B5AA9A", why: nil),
         Swatch.new(name: "Taupe", hex: "#9B8F80", why: nil),
-        Swatch.new(name: "Mid Gray", hex: "#8F8F8F", why: nil)
+        Swatch.new(name: "Mid Gray", hex: "#8F8F8F", why: nil),
+        Swatch.new(name: "Soft Navy", hex: "#39496B", why: nil),
+        Swatch.new(name: "Muted Sage", hex: "#9CAF88", why: nil),
+        Swatch.new(name: "Mushroom", hex: "#B2A296", why: nil),
+        Swatch.new(name: "Dusty Rose", hex: "#C08497", why: nil)
       ],
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for soft coloring"),
@@ -158,7 +194,10 @@ class StylePalette
         Swatch.new(name: "Burgundy / wine", hex: "#6E1F2F", why: "Red sits opposite green on the wheel, so it makes hazel eyes pop."),
         Swatch.new(name: "Camel / rust", hex: "#B98B57", why: "Echoes the gold in your eyes and lifts golden skin."),
         Swatch.new(name: "Chocolate brown", hex: "#4A2C21", why: "Warm and deep."),
-        Swatch.new(name: "Navy", hex: "#1F2A44", why: "Your best cool color. Pick ink navy over bright royal blue.")
+        Swatch.new(name: "Navy", hex: "#1F2A44", why: "Your best cool color. Pick ink navy over bright royal blue."),
+        Swatch.new(name: "Forest green", hex: "#31502E", why: "Echoes the green in your eyes while staying warm."),
+        Swatch.new(name: "Terracotta", hex: "#C08262", why: "Adds a softer warm accent than bright orange."),
+        Swatch.new(name: "Deep teal", hex: "#245B56", why: "A rich cool-leaning shade that still works with golden skin.")
       ],
       supporting: [
         Swatch.new(name: "Warm cream", hex: "#F1E8D6", why: "Use instead of stark white."),
@@ -166,7 +205,9 @@ class StylePalette
         Swatch.new(name: "Warm charcoal", hex: "#3B3733", why: "The gray that works for you."),
         Swatch.new(name: "Black", hex: "#141210", why: "Strong contrast and good with every best color."),
         Swatch.new(name: "Amber / mustard", hex: "#C68A1E", why: "Small doses: a bag, socks, a lens tint."),
-        Swatch.new(name: "Gold", hex: "#C8A24A", why: "Hardware, chains, watch details.")
+        Swatch.new(name: "Gold", hex: "#C8A24A", why: "Hardware, chains, watch details."),
+        Swatch.new(name: "Espresso", hex: "#38251D", why: "A softer dark neutral than pure black."),
+        Swatch.new(name: "Warm olive", hex: "#74764A", why: "A quieter everyday neutral that echoes hazel eyes.")
       ],
       lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
       lean_away: [
