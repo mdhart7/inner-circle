@@ -61,6 +61,15 @@
   .combination-body { padding: 10px; font-size: 13px; }
   .combination-names { font-weight: 700; }
   .combination-why { color: #aaa; margin-top: 5px; }
+  .outfit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 14px; }
+  .outfit-card { overflow: hidden; border: 1px solid #333; border-radius: 14px; background: #1a1a1a; }
+  .outfit-swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .outfit-color { min-width: 0; }
+  .outfit-color-fill { height: 64px; }
+  .outfit-color-info { padding: 8px; font-size: 12px; overflow-wrap: anywhere; }
+  .outfit-color-info strong { display: block; color: #fff; }
+  .outfit-color-info span { color: #aaa; }
+  .outfit-why { color: #aaa; font-size: 13px; padding: 0 10px 10px; }
 
   .retake-link { color: #00bfff; font-size: 14px; text-decoration: none; }
 </style>
@@ -149,6 +158,27 @@
               <% end %>
               <p class="why"><%= s.why %></p>
             </div>
+          </div>
+        <% end %>
+      </div>
+
+      <h3>Top-to-toe outfits</h3>
+      <p class="page-subtitle">Four head-to-toe combinations picked for your coloring.</p>
+      <div class="outfit-grid">
+        <% palette.outfit_combinations.each_with_index do |outfit, index| %>
+          <div class="outfit-card">
+            <div class="outfit-swatches">
+              <% [ [ "Top", outfit[:top] ], [ "Pants", outfit[:bottom] ], [ "Shoes", outfit[:shoes] ] ].each do |label, swatch| %>
+                <div class="outfit-color">
+                  <div class="outfit-color-fill" style="background: <%= swatch.hex %>;" aria-label="<%= "#{label}: #{swatch.name}" %>"></div>
+                  <div class="outfit-color-info">
+                    <strong><%= label %></strong>
+                    <span><%= swatch.name %></span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <p class="outfit-why"><strong>Look <%= index + 1 %>:</strong> <%= outfit[:why] %></p>
           </div>
         <% end %>
       </div>

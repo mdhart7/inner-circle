@@ -34,6 +34,12 @@ class StylePalette
         [ 4, 2, "Burnt orange and chocolate create bold warm contrast." ],
         [ 5, 7, "Forest green and warm navy pair two deep shades for rich contrast." ]
       ],
+      outfit_combinations: [
+        [ 0, 2, 2, "Olive and camel are warm earth tones; chocolate grounds the look." ],
+        [ 1, 3, 2, "Rust and chocolate make a rich tonal outfit with a grounded shoe." ],
+        [ 4, 2, 5, "Burnt orange and camel stay warm, with espresso keeping the contrast." ],
+        [ 5, 3, 1, "Forest green and chocolate create deep contrast, balanced by charcoal shoes." ]
+      ],
       lean_away: [
         Swatch.new(name: "Icy Pastel Blue", hex: "#BFD9E8", why: "fights a warm undertone"),
         Swatch.new(name: "Cool Fuchsia", hex: "#C9469E", why: "too cool against warm skin"),
@@ -68,6 +74,12 @@ class StylePalette
         [ 3, 1, "Terracotta and soft chocolate combine related earthy warmth." ],
         [ 2, 3, "Muted olive and sand make a low-contrast, nature-inspired pairing." ],
         [ 5, 2, "Honey gold and warm gray balance a soft accent with a grounded neutral." ]
+      ],
+      outfit_combinations: [
+        [ 0, 1, 1, "Soft camel and warm sand keep the outfit tonal; chocolate grounds the shoes." ],
+        [ 3, 4, 1, "Terracotta and warm taupe are neighboring earthy colors with a deep neutral shoe." ],
+        [ 2, 0, 3, "Muted olive and soft camel blend naturally, with sand keeping the look light." ],
+        [ 5, 4, 1, "Honey gold and warm taupe stay softly warm; chocolate adds a quiet anchor." ]
       ],
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend"),
@@ -104,6 +116,12 @@ class StylePalette
         [ 4, 1, "Fuchsia and charcoal balance a vivid accent with a strong neutral." ],
         [ 6, 3, "Royal purple and silver pair cool jewel tones with a light metallic neutral." ]
       ],
+      outfit_combinations: [
+        [ 1, 3, 2, "Sapphire and charcoal make a crisp high-contrast base; navy shoes finish it." ],
+        [ 2, 3, 4, "Emerald and charcoal let the jewel tone stand out; black shoes keep it sharp." ],
+        [ 4, 3, 1, "Fuchsia and charcoal balance a vivid top with a dark, clean shoe." ],
+        [ 6, 1, 4, "Royal purple and sapphire make a bold cool pairing grounded by black shoes." ]
+      ],
       lean_away: [
         Swatch.new(name: "Rust / Orange", hex: "#C1622D", why: "too warm for cool undertones"),
         Swatch.new(name: "Golden Camel", hex: "#C19A6B", why: "warm neutral fights cool skin"),
@@ -138,6 +156,12 @@ class StylePalette
         [ 1, 3, "Dusty rose and dove gray share a muted, soft quality." ],
         [ 2, 4, "Soft lavender and pale lavender make an easy tonal pairing." ],
         [ 4, 1, "Muted teal and cool gray balance color with a quiet neutral." ]
+      ],
+      outfit_combinations: [
+        [ 0, 5, 2, "Powder blue and cool taupe stay soft; navy shoes add gentle definition." ],
+        [ 1, 3, 1, "Dusty rose and slate gray share muted depth, finished with cool gray shoes." ],
+        [ 2, 5, 2, "Soft lavender and cool taupe create a calm pairing with navy shoes." ],
+        [ 4, 3, 1, "Muted teal and slate are cool-toned; gray shoes keep the contrast gentle." ]
       ],
       lean_away: [
         Swatch.new(name: "Bright Orange", hex: "#D2601A", why: "too warm and too bold"),
@@ -174,6 +198,12 @@ class StylePalette
         [ 3, 1, "Burgundy and black make a dramatic, high-contrast pairing." ],
         [ 4, 5, "Olive and greige bring two balanced earth tones together." ]
       ],
+      outfit_combinations: [
+        [ 0, 5, 1, "Navy and greige balance a strong dark with a soft neutral; black shoes sharpen it." ],
+        [ 2, 3, 1, "Deep teal and burgundy make a rich balanced pairing grounded by black shoes." ],
+        [ 3, 0, 4, "Burgundy and navy create even depth with navy shoes for a tonal finish." ],
+        [ 4, 5, 1, "Balanced olive and greige make an earthy outfit with a clean dark shoe." ]
+      ],
       lean_away: [
         Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature"),
         Swatch.new(name: "Very Warm Orange", hex: "#D2601A", why: "pushes past your balanced undertone"),
@@ -208,6 +238,12 @@ class StylePalette
         [ 1, 2, "Dusty teal and taupe blend cool and warm neutrals." ],
         [ 3, 1, "Soft burgundy and stone pair a muted accent with a natural neutral." ],
         [ 6, 0, "Dusty blue and soft white create a calm, airy contrast." ]
+      ],
+      outfit_combinations: [
+        [ 0, 2, 4, "Soft navy and mushroom stay balanced and muted; navy shoes keep the look cohesive." ],
+        [ 1, 2, 2, "Dusty teal and mushroom mix cool and warm neutrals with taupe shoes." ],
+        [ 3, 2, 1, "Soft burgundy and mushroom add a muted accent over a neutral base." ],
+        [ 6, 5, 3, "Dusty blue and warm gray keep the outfit soft with a gray shoe." ]
       ],
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for soft coloring"),
@@ -251,6 +287,12 @@ class StylePalette
         [ 1, 5, "Burgundy and gold use complementary red-green contrast with a warm accent." ],
         [ 2, 1, "Camel and warm sand layer golden hues for an easy tonal look." ],
         [ 5, 6, "Forest green and espresso deepen the green in hazel eyes with warm neutrals." ]
+      ],
+      outfit_combinations: [
+        [ 0, 2, 6, "Olive and camel echo hazel's green and gold; espresso grounds the shoes." ],
+        [ 1, 3, 6, "Burgundy and chocolate bring out hazel's green flecks with warm depth." ],
+        [ 2, 4, 3, "Camel and navy balance golden warmth with a deep cool shade; black shoes anchor it." ],
+        [ 5, 3, 6, "Forest green and chocolate echo hazel's green ring in a warm tonal outfit." ]
       ],
       lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
       lean_away: [
@@ -334,6 +376,18 @@ class StylePalette
         supporting: palette.fetch(:supporting).fetch(supporting_index),
         why: why
       )
+    end
+  end
+
+  def outfit_combinations
+    palette = override || bucket
+    palette.fetch(:outfit_combinations).map do |top_index, bottom_index, shoes_index, why|
+      {
+        top: palette.fetch(:lean_toward).fetch(top_index),
+        bottom: palette.fetch(:lean_toward).fetch(bottom_index),
+        shoes: palette.fetch(:supporting).fetch(shoes_index),
+        why: why
+      }
     end
   end
 end
