@@ -3,6 +3,7 @@
 # No API calls, no cost — this is a lookup table.
 class StylePalette
   Swatch = Struct.new(:name, :hex, :why, keyword_init: true)
+  ColorCombination = Struct.new(:primary, :supporting, :why, keyword_init: true)
 
   BUCKETS = {
     %w[warm high] => {
@@ -26,6 +27,12 @@ class StylePalette
         Swatch.new(name: "Espresso", hex: "#38251D", why: nil),
         Swatch.new(name: "Olive", hex: "#5E6B2F", why: nil),
         Swatch.new(name: "Warm Navy", hex: "#26384A", why: nil)
+      ],
+      color_combinations: [
+        [ 0, 0, "Olive and ivory balance an earthy hue with a light warm neutral." ],
+        [ 1, 3, "Rust and camel layer neighboring warm tones for a cohesive look." ],
+        [ 4, 2, "Burnt orange and chocolate create bold warm contrast." ],
+        [ 5, 7, "Forest green and warm navy pair two deep shades for rich contrast." ]
       ],
       lean_away: [
         Swatch.new(name: "Icy Pastel Blue", hex: "#BFD9E8", why: "fights a warm undertone"),
@@ -56,6 +63,12 @@ class StylePalette
         Swatch.new(name: "Muted Clay", hex: "#B77F63", why: nil),
         Swatch.new(name: "Warm Stone", hex: "#C2B39B", why: nil)
       ],
+      color_combinations: [
+        [ 0, 0, "Soft camel and warm ivory keep a gentle, warm tonal range." ],
+        [ 3, 1, "Terracotta and soft chocolate combine related earthy warmth." ],
+        [ 2, 3, "Muted olive and sand make a low-contrast, nature-inspired pairing." ],
+        [ 5, 2, "Honey gold and warm gray balance a soft accent with a grounded neutral." ]
+      ],
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend"),
         Swatch.new(name: "Icy Cool Blue", hex: "#B7D3E0", why: "fights the warm undertone"),
@@ -84,6 +97,12 @@ class StylePalette
         Swatch.new(name: "Icy Blue", hex: "#DDEAF1", why: nil),
         Swatch.new(name: "Cool Plum", hex: "#56304A", why: nil),
         Swatch.new(name: "Steel Gray", hex: "#717C87", why: nil)
+      ],
+      color_combinations: [
+        [ 1, 2, "Sapphire and navy create a crisp, tonal blue pairing." ],
+        [ 2, 0, "Emerald and white give a jewel tone clean contrast." ],
+        [ 4, 1, "Fuchsia and charcoal balance a vivid accent with a strong neutral." ],
+        [ 6, 3, "Royal purple and silver pair cool jewel tones with a light metallic neutral." ]
       ],
       lean_away: [
         Swatch.new(name: "Rust / Orange", hex: "#C1622D", why: "too warm for cool undertones"),
@@ -114,6 +133,12 @@ class StylePalette
         Swatch.new(name: "Cool Rose", hex: "#C89AA7", why: nil),
         Swatch.new(name: "Soft Slate", hex: "#737D85", why: nil)
       ],
+      color_combinations: [
+        [ 0, 0, "Powder blue and soft white keep the outfit light and cool." ],
+        [ 1, 3, "Dusty rose and dove gray share a muted, soft quality." ],
+        [ 2, 4, "Soft lavender and pale lavender make an easy tonal pairing." ],
+        [ 4, 1, "Muted teal and cool gray balance color with a quiet neutral." ]
+      ],
       lean_away: [
         Swatch.new(name: "Bright Orange", hex: "#D2601A", why: "too warm and too bold"),
         Swatch.new(name: "Golden Yellow", hex: "#E8B923", why: "warm and saturated, fights soft cool coloring"),
@@ -143,6 +168,12 @@ class StylePalette
         Swatch.new(name: "Silver", hex: "#BFC3C7", why: nil),
         Swatch.new(name: "Deep Teal", hex: "#1B4B4B", why: nil)
       ],
+      color_combinations: [
+        [ 0, 0, "Navy and white create clear, balanced contrast." ],
+        [ 2, 3, "Deep teal and stone combine a rich hue with a grounded neutral." ],
+        [ 3, 1, "Burgundy and black make a dramatic, high-contrast pairing." ],
+        [ 4, 5, "Olive and greige bring two balanced earth tones together." ]
+      ],
       lean_away: [
         Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature"),
         Swatch.new(name: "Very Warm Orange", hex: "#D2601A", why: "pushes past your balanced undertone"),
@@ -171,6 +202,12 @@ class StylePalette
         Swatch.new(name: "Muted Sage", hex: "#9CAF88", why: nil),
         Swatch.new(name: "Mushroom", hex: "#B2A296", why: nil),
         Swatch.new(name: "Dusty Rose", hex: "#C08497", why: nil)
+      ],
+      color_combinations: [
+        [ 0, 0, "Soft navy and soft white give gentle definition without a stark edge." ],
+        [ 1, 2, "Dusty teal and taupe blend cool and warm neutrals." ],
+        [ 3, 1, "Soft burgundy and stone pair a muted accent with a natural neutral." ],
+        [ 6, 0, "Dusty blue and soft white create a calm, airy contrast." ]
       ],
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for soft coloring"),
@@ -208,6 +245,12 @@ class StylePalette
         Swatch.new(name: "Gold", hex: "#C8A24A", why: "Hardware, chains, watch details."),
         Swatch.new(name: "Espresso", hex: "#38251D", why: "A softer dark neutral than pure black."),
         Swatch.new(name: "Warm olive", hex: "#74764A", why: "A quieter everyday neutral that echoes hazel eyes.")
+      ],
+      color_combinations: [
+        [ 0, 0, "Olive and warm cream echo hazel's green flecks with a soft light neutral." ],
+        [ 1, 5, "Burgundy and gold use complementary red-green contrast with a warm accent." ],
+        [ 2, 1, "Camel and warm sand layer golden hues for an easy tonal look." ],
+        [ 5, 6, "Forest green and espresso deepen the green in hazel eyes with warm neutrals." ]
       ],
       lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
       lean_away: [
@@ -281,5 +324,16 @@ class StylePalette
 
   def lean_away
     override ? override[:lean_away] : bucket[:lean_away]
+  end
+
+  def color_combinations
+    palette = override || bucket
+    palette.fetch(:color_combinations).map do |primary_index, supporting_index, why|
+      ColorCombination.new(
+        primary: palette.fetch(:lean_toward).fetch(primary_index),
+        supporting: palette.fetch(:supporting).fetch(supporting_index),
+        why: why
+      )
+    end
   end
 end

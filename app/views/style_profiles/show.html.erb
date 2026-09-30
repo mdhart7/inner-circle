@@ -54,6 +54,13 @@
   .swatch .body b { display: block; font-size: 14px; }
   .swatch .hex { color: #888; font-size: 11px; }
   .swatch .why { color: #aaa; margin-top: 4px; }
+  .combination-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px; }
+  .combination-card { overflow: hidden; border: 1px solid #333; border-radius: 14px; background: #1a1a1a; }
+  .combination-colors { display: grid; grid-template-columns: 1fr 1fr; height: 76px; }
+  .combination-colors div { min-width: 0; }
+  .combination-body { padding: 10px; font-size: 13px; }
+  .combination-names { font-weight: 700; }
+  .combination-why { color: #aaa; margin-top: 5px; }
 
   .retake-link { color: #00bfff; font-size: 14px; text-decoration: none; }
 </style>
@@ -105,6 +112,22 @@
           <div class="swatch">
             <div class="fill" style="background: <%= s.hex %>;"></div>
             <div class="body"><b><%= s.name %></b><span class="hex"><%= s.hex %></span></div>
+          </div>
+        <% end %>
+      </div>
+
+      <h3>Top color combinations</h3>
+      <div class="combination-grid">
+        <% palette.color_combinations.each do |combination| %>
+          <div class="combination-card">
+            <div class="combination-colors" aria-label="<%= "#{combination.primary.name} and #{combination.supporting.name}" %>">
+              <div style="background: <%= combination.primary.hex %>;"></div>
+              <div style="background: <%= combination.supporting.hex %>;"></div>
+            </div>
+            <div class="combination-body">
+              <div class="combination-names"><%= combination.primary.name %> + <%= combination.supporting.name %></div>
+              <p class="combination-why"><%= combination.why %></p>
+            </div>
           </div>
         <% end %>
       </div>
