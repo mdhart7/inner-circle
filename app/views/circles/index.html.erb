@@ -65,16 +65,25 @@
   font-size: 20px;
 }
 
-.circle-back-link {
-  display: inline-block;
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-btn {
   color: #999;
   font-size: 14px;
   text-decoration: none;
-  margin-bottom: 20px;
 }
 
-.circle-back-link:hover,
-.circle-back-link:focus-visible {
+.nav-btn:hover,
+.nav-btn:focus-visible {
   color: #fff;
 }
 
@@ -148,11 +157,13 @@
 </style>
 
 
-<div class="inner-container">
-  <%= link_to root_path, class: "circle-back-link" do %>
+<div class="nav-bar">
+  <%= link_to root_path, class: "nav-btn" do %>
     <i class="fa-solid fa-arrow-left"></i> Back to Feed
   <% end %>
+</div>
 
+<div class="inner-container">
   <h2 class="feed-header">Your Posts</h2>
 
   <% if @my_polls.present? %>
