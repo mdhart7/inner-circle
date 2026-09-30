@@ -18,6 +18,7 @@
     color: #999; text-decoration: none; font-size: 14px;
     display: inline-flex; align-items: center; white-space: nowrap;
   }
+  .ready-to-post-btn { gap: 4px; }
   .nav-btn:hover { color: #fff; }
 
   .login-btn {
@@ -207,7 +208,7 @@
       Style
     <% end %>
 
-    <%= link_to ready_to_post_path, class: "nav-btn" do %>
+    <%= link_to ready_to_post_path, class: "nav-btn ready-to-post-btn" do %>
       <i class="fa-brands fa-instagram"></i> Ready to Post
     <% end %>
 
