@@ -32,8 +32,57 @@
 
 .invite-qr {
   margin-top: 10px;
-  width: 180px;
-  height: 180px;
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+
+.circle-side-by-side {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  align-items: stretch;
+}
+
+.circle-side-by-side .circle-add-box,
+.circle-side-by-side .circle-qr-box {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.circle-side-by-side .circle-add-box,
+.circle-side-by-side .circle-qr-box {
+  margin-bottom: 0;
+  padding: 14px;
+}
+
+.circle-side-by-side .circle-add-box h3,
+.circle-side-by-side .circle-qr-box h3 {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.circle-side-by-side .circle-input,
+.circle-side-by-side .circle-add-btn {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 13px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.circle-side-by-side .circle-add-btn {
+  font-size: 14px;
+}
+
+/* Below ~380px, two columns get too tight (e.g. a 140px QR code alone
+   would barely fit) -- stack back to one box per row instead of forcing
+   a cramped layout on smaller phones. */
+@media (max-width: 380px) {
+  .circle-side-by-side {
+    flex-direction: column;
+  }
 }
 
 .circle-member-card {
@@ -196,31 +245,32 @@
   <p class="page-subtitle">Add or invite your council</p>
 
 
-  <div class="circle-add-box">
-    <h3>Go Add Your Inner Circle that's already here</h3>
+  <div class="circle-side-by-side">
+    <div class="circle-add-box">
+      <h3>Add a friend</h3>
 
-    <%= form_with url: circle_members_path, method: :post, local: true do %>
-      <input 
-        type="text" 
-        name="identifier" 
-        placeholder="Enter email or username"
-        class="circle-input"
-        required
-      >
-      <button type="submit" class="circle-add-btn">Add</button>
-    <% end %>
-  </div>
+      <%= form_with url: circle_members_path, method: :post, local: true do %>
+        <input
+          type="text"
+          name="identifier"
+          placeholder="Username/email"
+          class="circle-input"
+          required
+        >
+        <button type="submit" class="circle-add-btn">Add</button>
+      <% end %>
+    </div>
 
+    <div class="circle-qr-box">
+      <h3>Invite via QR Code</h3>
+      <p>Have your people scan to join</p>
 
-  <div class="circle-qr-box">
-    <h3>Invite your people via QR Code</h3>
-    <p>Have your people scan to join the app</p>
-
-    <%= image_tag(
-      "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=#{CGI.escape(new_user_registration_url)}",
-      alt: "Invite QR Code",
-      class: "invite-qr"
-    ) %>
+      <%= image_tag(
+        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=#{CGI.escape(new_user_registration_url)}",
+        alt: "Invite QR Code",
+        class: "invite-qr"
+      ) %>
+    </div>
   </div>
 
   <div class="circle-add-box">
