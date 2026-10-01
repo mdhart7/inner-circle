@@ -88,8 +88,11 @@
 
 .circle-side-by-side .circle-add-btn {
   font-size: 14px;
-  flex: 1 1 auto;
-  min-height: 120px;
+  align-self: center;
+  width: min(100%, 180px);
+  flex: 0 0 auto;
+  min-height: 48px;
+  margin-top: 12px;
 }
 
 /* Keep the cards compact when two columns are tight, then stack on the
@@ -104,11 +107,6 @@
   .circle-side-by-side {
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
-  }
-
-  .circle-side-by-side .circle-add-btn {
-    flex: 0 0 auto;
-    min-height: 48px;
   }
 }
 
