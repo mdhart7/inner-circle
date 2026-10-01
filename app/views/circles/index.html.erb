@@ -291,7 +291,7 @@
       <p>Have your people scan to join</p>
 
       <%= image_tag(
-        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=#{CGI.escape(new_user_registration_url)}",
+        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=#{CGI.escape(new_user_registration_url(ref: current_user.username))}",
         alt: "Invite QR Code",
         class: "invite-qr"
       ) %>
