@@ -113,21 +113,21 @@
   }
 
   .vote-section {
-    display: grid; grid-template-columns: minmax(0, 1fr) 48px;
-    align-items: center; gap: 12px; margin-top: 15px;
+    display: flex; flex-direction: column; align-items: stretch;
+    gap: 12px; margin-top: 15px;
   }
-  .vote-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-width: 0; }
-  .vote-buttons { display: flex; align-items: stretch; gap: 12px; flex: 0 1 auto; min-width: 0; }
+  .vote-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; min-width: 0; }
+  .vote-buttons.has-cover { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .vote-btn {
-    flex: 0 1 120px; width: 120px; max-width: 140px; min-width: 60px;
-    min-height: 48px; padding: 12px; border-radius: 8px; border: none;
+    width: 100%; min-width: 0; min-height: 48px; padding: 12px 8px;
+    border-radius: 8px; border: none;
     font-size: 16px; font-weight: 700; cursor: pointer;
   }
   .vote-yes { background-color: #00ff00; color: #000; }
   .vote-no { background-color: #ff0000; color: #fff; }
 
   .cover-btn {
-    flex: 0 0 auto; width: 56px; border-radius: 8px; border: none;
+    width: 100%; min-width: 0; min-height: 48px; border-radius: 8px; border: none;
     background-color: #222; color: #777; cursor: pointer;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 2px; font-size: 12px; font-weight: 700;
@@ -146,38 +146,38 @@
   .cover-ribbon[hidden] { display: none; }
 
   .vote-count {
-    flex: 0 1 auto; background-color: #222; padding: 8px 12px;
+    background-color: #222; padding: 8px 12px;
     border-radius: 8px; text-align: center; font-size: 14px;
   }
   .share-post-btn {
-    width: 48px; height: 48px; padding: 0; border: 1px solid #444;
+    width: 100%; min-height: 48px; padding: 0; border: 1px solid #444;
     border-radius: 8px; background: #222; color: #ddd; cursor: pointer;
     font-size: 18px;
   }
   .share-post-btn:hover { border-color: #00bfff; color: #fff; }
   .feed-header { margin: 28px 0 16px; }
+  .post-author {
+    display: block; clear: both; margin: 14px 20px 0 0;
+    color: #aaa; line-height: 1.4;
+  }
 
   @media (max-width: 480px) {
-    .vote-section { grid-template-columns: minmax(0, 1fr) 42px; gap: 8px; }
-    .vote-controls { gap: 8px; }
-    .vote-buttons { gap: 8px; }
-    .vote-btn { width: auto; padding: 10px 8px; }
-    .cover-btn { width: 44px; }
-    .vote-count { flex: 1 0 100%; text-align: left; }
-    .share-post-btn { width: 42px; height: 42px; }
+    .vote-section { gap: 10px; }
+    .vote-buttons, .vote-buttons.has-cover { gap: 8px; }
+    .vote-btn { padding: 10px 6px; font-size: 14px; }
+    .cover-btn { font-size: 11px; }
   }
 
   .carousel { overflow: hidden; }
   .carousel-track {
     display: flex; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
-    align-items: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    align-items: flex-start; gap: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
   .carousel-track::-webkit-scrollbar { display: none; }
   .carousel-slide {
     flex: 0 0 100%; min-width: 100%; width: 100%; box-sizing: border-box;
-    scroll-snap-align: start; border-right: 8px solid #000;
+    scroll-snap-align: start;
   }
-  .carousel-slide:last-child { border-right: none; }
   .slide-image-wrapper { position: relative; }
   .carousel-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
@@ -313,39 +313,37 @@
               <p class="permanent-caption">This Hard?</p>
 
               <div class="vote-section">
-                <div class="vote-controls">
-                  <div class="vote-buttons">
-                    <button class="vote-btn vote-yes" onclick="vote(<%= post.id %>, 'yes')">Yes</button>
-                    <button class="vote-btn vote-no" onclick="vote(<%= post.id %>, 'no')">No</button>
-                    <% if poll.carousel? %>
-                      <button type="button" class="cover-btn <%= "active" if post.covered_by?(current_user) %>"
-                              id="cover-btn-<%= post.id %>" onclick="pickCover(<%= post.id %>)"
-                              aria-label="Pick as cover" title="Pick as cover">
-                        <i class="fa-solid fa-star"></i>
-                        <span id="cover-count-<%= post.id %>"><%= post.cover_votes_count %></span>
-                      </button>
+                <div class="vote-buttons <%= "has-cover" if poll.carousel? %>">
+                  <button class="vote-btn vote-yes" onclick="vote(<%= post.id %>, 'yes')">Yes</button>
+                  <button class="vote-btn vote-no" onclick="vote(<%= post.id %>, 'no')">No</button>
+                  <% if poll.carousel? %>
+                    <button type="button" class="cover-btn <%= "active" if post.covered_by?(current_user) %>"
+                            id="cover-btn-<%= post.id %>" onclick="pickCover(<%= post.id %>)"
+                            aria-label="Pick as cover" title="Pick as cover">
+                      <i class="fa-solid fa-star"></i>
+                      <span id="cover-count-<%= post.id %>"><%= post.cover_votes_count %></span>
+                    </button>
+                  <% end %>
+                  <button type="button" class="share-post-btn" onclick="sharePost(<%= post.id %>)"
+                          aria-label="Share post" title="Share post">
+                    <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="vote-count">
+                  <span id="count-<%= post.id %>" class="count-number"><%= post.total_votes_count %></span>
+                  <div class="vote-breakdown">
+                    <span id="yes-<%= post.id %>"><%= post.yes_votes_count %></span> yes •
+                    <span id="no-<%= post.id %>"><%= post.no_votes_count %></span> no
+                  </div>
+                  <div id="status-<%= post.id %>" class="vote-status">
+                    <% if current_user %>
+                      <% vote = post.user_vote(current_user) %>
+                      <% if vote %>
+                        You voted <%= vote.vote_type == "yes" ? "yes" : "no" %>
+                      <% end %>
                     <% end %>
                   </div>
-                  <div class="vote-count">
-                    <span id="count-<%= post.id %>" class="count-number"><%= post.total_votes_count %></span>
-                    <div class="vote-breakdown">
-                      <span id="yes-<%= post.id %>"><%= post.yes_votes_count %></span> yes •
-                      <span id="no-<%= post.id %>"><%= post.no_votes_count %></span> no
-                    </div>
-                    <div id="status-<%= post.id %>" class="vote-status">
-                      <% if current_user %>
-                        <% vote = post.user_vote(current_user) %>
-                        <% if vote %>
-                          You voted <%= vote.vote_type == "yes" ? "yes" : "no" %>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </div>
                 </div>
-                <button type="button" class="share-post-btn" onclick="sharePost(<%= post.id %>)"
-                        aria-label="Share post" title="Share post">
-                  <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-                </button>
               </div>
 
               <div class="comments-section">
