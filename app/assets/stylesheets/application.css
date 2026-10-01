@@ -11,6 +11,26 @@
 
 @import "custom-image.css";
 
+.nav-bar .back-to-feed-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #999;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.nav-bar .back-to-feed-link i {
+  font-size: 25px;
+}
+
+.nav-bar .back-to-feed-link:hover,
+.nav-bar .back-to-feed-link:focus-visible {
+  color: #fff;
+}
+
 button,
 input[type="submit"],
 input[type="button"],
