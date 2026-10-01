@@ -39,10 +39,12 @@
 }
 
 .circle-side-by-side {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 25px;
   align-items: stretch;
+  min-height: 350px;
 }
 
 .circle-side-by-side .circle-add-box,
@@ -60,6 +62,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-height: 0;
 }
 
 .circle-side-by-side .circle-add-box,
@@ -85,20 +88,27 @@
 
 .circle-side-by-side .circle-add-btn {
   font-size: 14px;
-  flex: 1;
-  min-height: 64px;
+  flex: 1 1 auto;
+  min-height: 120px;
 }
 
-/* Below ~380px, two columns get too tight (e.g. a 140px QR code alone
-   would barely fit) -- stack back to one box per row instead of forcing
-   a cramped layout on smaller phones. */
+/* Keep the cards compact when two columns are tight, then stack on the
+   narrowest phones. */
+@media (max-width: 600px) {
+  .circle-side-by-side {
+    min-height: 280px;
+  }
+}
+
 @media (max-width: 380px) {
   .circle-side-by-side {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
   }
 
   .circle-side-by-side .circle-add-btn {
     flex: 0 0 auto;
+    min-height: 48px;
   }
 }
 
