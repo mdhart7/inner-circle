@@ -78,6 +78,28 @@
   .outfit-why { color: #aaa; font-size: 13px; padding: 0 10px 10px; }
 
   .retake-link { color: #00bfff; font-size: 14px; text-decoration: none; }
+
+  .color-search-box {
+    background: #111; border: 1px solid #333; border-radius: 20px;
+    padding: 16px; margin-bottom: 24px;
+  }
+  .color-search-box label { font-weight: 600; display: block; margin-bottom: 8px; }
+  .color-search-input {
+    width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444;
+    background: #1a1a1a; color: #fff; font-size: 16px; box-sizing: border-box;
+  }
+  .color-search-hint { color: #888; font-size: 12px; margin-top: 6px; }
+  .color-search-empty { color: #888; font-size: 13px; margin-top: 10px; }
+  .color-search-results { margin-top: 16px; display: none; }
+  .color-search-results.show { display: block; }
+  .csr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .csr-card { border: 1px solid #333; border-radius: 14px; overflow: hidden; background: #1a1a1a; }
+  .csr-label { padding: 8px 10px 0; font-weight: 700; font-size: 13px; }
+  .csr-swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 8px; }
+  .csr-fill { height: 48px; }
+  .csr-info { padding: 6px; font-size: 11px; }
+  .csr-info strong { display: block; color: #fff; }
+  .csr-info span { color: #aaa; }
 </style>
 
 <div class="nav-bar">
@@ -90,6 +112,36 @@
   <h1 class="page-title">Your Style</h1>
 
   <% if @style_profile&.persisted? %>
+    <% palette_for_search = @style_profile.palette %>
+    <div class="color-search-box">
+      <label for="color-search-input">Search a color from your palette</label>
+      <input type="text" id="color-search-input" class="color-search-input"
+             placeholder="Try Olive, Navy, Marigold..." autocomplete="off"
+             list="color-search-list" oninput="searchStyleColor(this.value)">
+      <datalist id="color-search-list">
+        <% palette_for_search.searchable_colors.each do |c| %>
+          <option value="<%= c.name %>"></option>
+        <% end %>
+      </datalist>
+      <p class="color-search-hint">Type a color's name to see how to wear it as a top, a bottom, or a shoe.</p>
+      <p class="color-search-empty" id="color-search-empty" hidden>No color in your palette matches that.</p>
+      <div class="color-search-results" id="color-search-results"></div>
+    </div>
+
+    <script type="application/json" id="color-search-data"><%== raw(
+      palette_for_search.searchable_colors.to_h do |c|
+        result = palette_for_search.style_color(c.name)
+        [
+          c.name,
+          {
+            as_top: { top: result[:as_top][:top].to_h, bottom: result[:as_top][:bottom].to_h, shoes: result[:as_top][:shoes].to_h },
+            as_bottom: { top: result[:as_bottom][:top].to_h, bottom: result[:as_bottom][:bottom].to_h, shoes: result[:as_bottom][:shoes].to_h },
+            as_shoes: { top: result[:as_shoes][:top].to_h, bottom: result[:as_shoes][:bottom].to_h, shoes: result[:as_shoes][:shoes].to_h }
+          }
+        ]
+      end.to_json
+    ) %></script>
+
     <p class="page-subtitle">
       Based on your questionnaire answers.
       <%= link_to "Retake", "#", class: "retake-link", onclick: "document.getElementById('questionnaire').hidden = false; document.getElementById('results').hidden = true; return false;" %>
@@ -137,14 +189,10 @@
       <div class="metal-preference">
         <div class="metal-bar" role="img" aria-label="<%= palette.metal_preference %>">
           <% if gold_percentage.positive? %>
-            <div class="metal-bar-gold" style="width: <%= gold_percentage %>%;">
-              <%= "Gold #{gold_percentage}%" if gold_percentage > 0 %>
-            </div>
+            <div class="metal-bar-gold" style="width: <%= gold_percentage %>%;"></div>
           <% end %>
           <% if silver_percentage.positive? %>
-            <div class="metal-bar-silver" style="width: <%= silver_percentage %>%;">
-              <%= "Silver #{silver_percentage}%" if silver_percentage > 0 %>
-            </div>
+            <div class="metal-bar-silver" style="width: <%= silver_percentage %>%;"></div>
           <% end %>
         </div>
         <p class="metal-caption"><%= palette.metal_preference %> based on your undertone.</p>
@@ -193,7 +241,7 @@
         <% palette.outfit_combinations.each_with_index do |outfit, index| %>
           <div class="outfit-card">
             <div class="outfit-swatches">
-              <% [ [ "Top", outfit.top ], [ "Pants", outfit.bottom ], [ "Shoes", outfit.shoes ] ].each do |label, swatch| %>
+              <% [ [ "Top", outfit.top ], [ "Bottoms", outfit.bottom ], [ "Shoes", outfit.shoes ] ].each do |label, swatch| %>
                 <div class="outfit-color">
                   <div class="outfit-color-fill" style="background: <%= swatch.hex %>;" aria-label="<%= "#{label}: #{swatch.name}" %>"></div>
                   <div class="outfit-color-info">
@@ -212,6 +260,56 @@
     <div id="questionnaire" hidden>
       <%= render "form", style_profile: @style_profile %>
     </div>
+
+  <script>
+    function swatchHtml(role, swatch) {
+      return `<div class="outfit-color">
+        <div class="outfit-color-fill" style="background: ${swatch.hex};" aria-label="${role}: ${swatch.name}"></div>
+        <div class="outfit-color-info"><strong>${role}</strong><span>${swatch.name}</span></div>
+      </div>`;
+    }
+
+    function lookCard(label, look) {
+      return `<div class="csr-card">
+        <div class="csr-label">${label}</div>
+        <div class="csr-swatches">
+          ${swatchHtml("Top", look.top)}
+          ${swatchHtml("Bottom", look.bottom)}
+          ${swatchHtml("Shoes", look.shoes)}
+        </div>
+      </div>`;
+    }
+
+    function searchStyleColor(query) {
+      const dataEl = document.getElementById("color-search-data");
+      const resultsEl = document.getElementById("color-search-results");
+      const emptyEl = document.getElementById("color-search-empty");
+      const data = JSON.parse(dataEl.textContent);
+
+      const trimmed = query.trim().toLowerCase();
+      if (!trimmed) {
+        resultsEl.classList.remove("show");
+        emptyEl.hidden = true;
+        return;
+      }
+
+      const matchName = Object.keys(data).find((name) => name.toLowerCase() === trimmed);
+      if (!matchName) {
+        resultsEl.classList.remove("show");
+        emptyEl.hidden = false;
+        return;
+      }
+
+      const entry = data[matchName];
+      resultsEl.innerHTML = `<div class="csr-grid">
+        ${lookCard(matchName + " as a top", entry.as_top)}
+        ${lookCard(matchName + " as a bottom", entry.as_bottom)}
+        ${lookCard(matchName + " as a shoe", entry.as_shoes)}
+      </div>`;
+      resultsEl.classList.add("show");
+      emptyEl.hidden = true;
+    }
+  </script>
 
   <% else %>
     <p class="page-subtitle">Answer a few questions and get a color palette built around you.</p>
