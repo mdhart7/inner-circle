@@ -14,16 +14,15 @@
 .nav-bar .back-to-feed-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   color: #999;
-  font-size: 28px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1.2;
   text-decoration: none;
 }
 
 .nav-bar .back-to-feed-link i {
-  font-size: 25px;
+  font-size: 14px;
 }
 
 .nav-bar .back-to-feed-link:hover,
