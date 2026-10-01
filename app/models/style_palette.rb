@@ -3,8 +3,6 @@
 # No API calls, no cost — this is a lookup table.
 class StylePalette
   Swatch = Struct.new(:name, :hex, :why, keyword_init: true)
-  ColorCombination = Struct.new(:primary, :accent, :why, keyword_init: true)
-  OutfitCombination = Struct.new(:top, :bottom, :shoes, :why, keyword_init: true)
 
   BUCKETS = {
     %w[warm high] => {
@@ -24,23 +22,6 @@ class StylePalette
         Swatch.new(name: "Paprika", hex: "#C94F2D", why: nil),
         Swatch.new(name: "Peacock teal", hex: "#167C78", why: nil),
         Swatch.new(name: "Berry", hex: "#963D52", why: nil)
-      ],
-      neutrals: [
-        Swatch.new(name: "Ivory", hex: "#F5F0E1", why: nil),
-        Swatch.new(name: "Golden Camel", hex: "#B98B57", why: nil),
-        Swatch.new(name: "Deep Chocolate", hex: "#4A2C21", why: nil)
-      ],
-      color_combinations: [
-        [ 0, 0, "Olive and marigold combine neighboring earthy hues with lively warmth." ],
-        [ 1, 2, "Rust and peacock teal add complementary orange-blue-green contrast." ],
-        [ 4, 1, "Burnt orange and paprika deepen the same warm-red family without repeating it." ],
-        [ 5, 3, "Forest green and berry pair a nature tone with a jewel-toned contrast." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Olive", hex: "#5E6B2F"), Swatch.new(name: "Camel", hex: "#B98B57"), Swatch.new(name: "Chocolate", hex: "#4A2C21"), "Warm earth tones stay cohesive, with chocolate grounding the look." ],
-        [ Swatch.new(name: "Rust", hex: "#B7472A"), Swatch.new(name: "Warm navy", hex: "#26384A"), Swatch.new(name: "Oxblood", hex: "#54252C"), "Rust and navy balance warmth with cool depth; oxblood adds a rich finish." ],
-        [ Swatch.new(name: "Burnt orange", hex: "#C1622D"), Swatch.new(name: "Forest green", hex: "#31502E"), Swatch.new(name: "Golden tan", hex: "#A87536"), "Orange and green create natural complementary contrast, warmed by tan." ],
-        [ Swatch.new(name: "Deep teal", hex: "#1B5B55"), Swatch.new(name: "Burgundy", hex: "#722F37"), Swatch.new(name: "Cognac", hex: "#8A4B2D"), "Deep jewel tones balance each other while cognac brings warmth." ]
       ],
       gold_metal_percentage: 100,
       lean_away: [
@@ -68,23 +49,6 @@ class StylePalette
         Swatch.new(name: "Soft teal", hex: "#5F9990", why: nil),
         Swatch.new(name: "Dusty paprika", hex: "#A95843", why: nil)
       ],
-      neutrals: [
-        Swatch.new(name: "Warm Ivory", hex: "#F2E9D8", why: nil),
-        Swatch.new(name: "Warm Taupe", hex: "#A68A6D", why: nil),
-        Swatch.new(name: "Soft Chocolate", hex: "#6B4A3A", why: nil)
-      ],
-      color_combinations: [
-        [ 0, 0, "Soft camel and soft coral share a gentle warmth without sharp contrast." ],
-        [ 3, 2, "Dusty terracotta and soft teal balance warm and cool in a muted way." ],
-        [ 2, 1, "Muted olive and saffron create a soft, warm complementary pairing." ],
-        [ 5, 3, "Honey gold and dusty paprika bring two warm tones together at different depths." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Soft camel", hex: "#C9A876"), Swatch.new(name: "Muted olive", hex: "#7C7A4E"), Swatch.new(name: "Warm cocoa", hex: "#76513C"), "Soft earth tones stay close in depth and warmth." ],
-        [ Swatch.new(name: "Dusty terracotta", hex: "#C08262"), Swatch.new(name: "Warm taupe", hex: "#A68A6D"), Swatch.new(name: "Moss", hex: "#77794C"), "Muted neighboring hues create an easy, low-contrast outfit." ],
-        [ Swatch.new(name: "Honey gold", hex: "#D6A552"), Swatch.new(name: "Soft chocolate", hex: "#6B4A3A"), Swatch.new(name: "Clay", hex: "#B77F63"), "Warm gold and chocolate create gentle depth with a clay accent." ],
-        [ Swatch.new(name: "Warm sand", hex: "#D6BE9C"), Swatch.new(name: "Soft moss", hex: "#8C8B5A"), Swatch.new(name: "Muted peach", hex: "#D7A186"), "Sand and moss make a nature-inspired base, lifted by muted peach." ]
-      ],
       gold_metal_percentage: 100,
       lean_away: [
         Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend"),
@@ -110,23 +74,6 @@ class StylePalette
         Swatch.new(name: "Blue violet", hex: "#4B3F9B", why: nil),
         Swatch.new(name: "Jade", hex: "#168A78", why: nil),
         Swatch.new(name: "Steel blue", hex: "#4A6FA5", why: nil)
-      ],
-      neutrals: [
-        Swatch.new(name: "Icy White", hex: "#F4F6F7", why: nil),
-        Swatch.new(name: "Steel", hex: "#717C87", why: nil),
-        Swatch.new(name: "Charcoal / Black", hex: "#1C1C1C", why: nil)
-      ],
-      color_combinations: [
-        [ 1, 3, "Sapphire and steel blue create a tonal cool-blue pairing." ],
-        [ 2, 0, "Emerald and raspberry make a vivid complementary contrast." ],
-        [ 4, 1, "Fuchsia and blue violet pair neighboring saturated jewel tones." ],
-        [ 6, 2, "Royal purple and jade add bold contrast with cool clarity." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Sapphire", hex: "#0F52BA"), Swatch.new(name: "Charcoal", hex: "#1C1C1C"), Swatch.new(name: "Cobalt", hex: "#0047AB"), "Sapphire and charcoal make a crisp high-contrast base, finished with blue." ],
-        [ Swatch.new(name: "Emerald", hex: "#065535"), Swatch.new(name: "Icy white", hex: "#F4F6F7"), Swatch.new(name: "Plum", hex: "#56304A"), "Emerald and icy white create clear contrast with a cool jewel-tone shoe." ],
-        [ Swatch.new(name: "Fuchsia", hex: "#C71585"), Swatch.new(name: "Navy", hex: "#14213D"), Swatch.new(name: "Steel", hex: "#717C87"), "A vivid fuchsia top stands out against navy with a cool gray finish." ],
-        [ Swatch.new(name: "Royal purple", hex: "#5B2C83"), Swatch.new(name: "Sapphire blue", hex: "#1756A9"), Swatch.new(name: "Raspberry", hex: "#A3134D"), "Saturated jewel tones create confident cool contrast." ]
       ],
       gold_metal_percentage: 0,
       lean_away: [
@@ -154,23 +101,6 @@ class StylePalette
         Swatch.new(name: "Sage mist", hex: "#8FA593", why: nil),
         Swatch.new(name: "Heather", hex: "#9B8AA6", why: nil)
       ],
-      neutrals: [
-        Swatch.new(name: "Misty Blue", hex: "#BBCBD8", why: nil),
-        Swatch.new(name: "Cool Taupe", hex: "#9C9186", why: nil),
-        Swatch.new(name: "Slate Gray", hex: "#6E7A82", why: nil)
-      ],
-      color_combinations: [
-        [ 0, 0, "Powder blue and periwinkle keep the look light and cool." ],
-        [ 1, 3, "Dusty rose and heather balance soft warm-leaning and cool-leaning pinks." ],
-        [ 2, 1, "Soft lavender and orchid make a calm, related cool pairing." ],
-        [ 4, 2, "Muted teal and sage mist bring two quiet greens together at different temperatures." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Powder blue", hex: "#A9C4D9"), Swatch.new(name: "Slate gray", hex: "#6E7A82"), Swatch.new(name: "Muted teal", hex: "#4C8C8A"), "Cool, softened colors create definition without harsh contrast." ],
-        [ Swatch.new(name: "Dusty rose", hex: "#C08497"), Swatch.new(name: "Cool taupe", hex: "#9C9186"), Swatch.new(name: "Eucalyptus", hex: "#78928B"), "Muted rose and taupe blend gently, with eucalyptus adding a cool finish." ],
-        [ Swatch.new(name: "Soft lavender", hex: "#B9A6CC"), Swatch.new(name: "Misty blue", hex: "#BBCBD8"), Swatch.new(name: "Mauve", hex: "#A77D91"), "Related cool tones make a calm, softly layered outfit." ],
-        [ Swatch.new(name: "Muted berry", hex: "#A66D7C"), Swatch.new(name: "Soft navy", hex: "#2C3E56"), Swatch.new(name: "Cool rose", hex: "#C89AA7"), "Muted berry and navy balance a soft accent with a deeper cool base." ]
-      ],
       gold_metal_percentage: 0,
       lean_away: [
         Swatch.new(name: "Bright Orange", hex: "#D2601A", why: "too warm and too bold"),
@@ -197,23 +127,6 @@ class StylePalette
         Swatch.new(name: "Aubergine", hex: "#583C59", why: nil),
         Swatch.new(name: "Rust", hex: "#A8522E", why: nil)
       ],
-      neutrals: [
-        Swatch.new(name: "White", hex: "#FFFFFF", why: nil),
-        Swatch.new(name: "Greige", hex: "#A99C8B", why: nil),
-        Swatch.new(name: "Charcoal", hex: "#333333", why: nil)
-      ],
-      color_combinations: [
-        [ 0, 1, "Navy and blue spruce make a tonal, balanced pairing." ],
-        [ 2, 0, "Deep teal and cranberry create rich color contrast." ],
-        [ 3, 2, "Burgundy and aubergine combine neighboring jewel tones." ],
-        [ 4, 3, "Olive and rust create a grounded, earthy pairing." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Navy", hex: "#1F2A44"), Swatch.new(name: "Greige", hex: "#A99C8B"), Swatch.new(name: "Black", hex: "#111111"), "A strong dark and soft neutral create balanced definition." ],
-        [ Swatch.new(name: "Deep teal", hex: "#1B4B4B"), Swatch.new(name: "Burgundy", hex: "#722F37"), Swatch.new(name: "Stone", hex: "#B5AA9A"), "Rich, balanced hues are lifted by a quiet natural accent." ],
-        [ Swatch.new(name: "Balanced olive", hex: "#6B7047"), Swatch.new(name: "White", hex: "#FFFFFF"), Swatch.new(name: "Mid gray", hex: "#808080"), "Olive and white create clean contrast with a neutral gray finish." ],
-        [ Swatch.new(name: "Jade", hex: "#2E7D6B"), Swatch.new(name: "Charcoal", hex: "#333333"), Swatch.new(name: "Silver", hex: "#BFC3C7"), "Jade and charcoal feel polished, with silver adding a cool light accent." ]
-      ],
       gold_metal_percentage: 50,
       lean_away: [
         Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature"),
@@ -239,23 +152,6 @@ class StylePalette
         Swatch.new(name: "Eucalyptus", hex: "#7F9788", why: nil),
         Swatch.new(name: "Muted berry", hex: "#A66D7C", why: nil),
         Swatch.new(name: "Clay", hex: "#B98269", why: nil)
-      ],
-      neutrals: [
-        Swatch.new(name: "Soft White", hex: "#F1EFEA", why: nil),
-        Swatch.new(name: "Mushroom", hex: "#B2A296", why: nil),
-        Swatch.new(name: "Warm Gray", hex: "#948C7E", why: nil)
-      ],
-      color_combinations: [
-        [ 0, 1, "Soft navy and eucalyptus create a calm, balanced pairing." ],
-        [ 1, 3, "Dusty teal and clay blend a cool tone with warm earthiness." ],
-        [ 3, 0, "Soft burgundy and soft plum combine neighboring muted jewel tones." ],
-        [ 6, 2, "Dusty blue and muted berry create a gentle, balanced contrast." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Soft navy", hex: "#39496B"), Swatch.new(name: "Mushroom", hex: "#B2A296"), Swatch.new(name: "Dusty teal", hex: "#5C8A89"), "Soft, balanced shades add definition without a sharp contrast." ],
-        [ Swatch.new(name: "Muted sage", hex: "#9CAF88"), Swatch.new(name: "Soft burgundy", hex: "#8C5766"), Swatch.new(name: "Warm gray", hex: "#948C7E"), "Muted complementary hues add color while staying blended." ],
-        [ Swatch.new(name: "Dusty blue", hex: "#8299AA"), Swatch.new(name: "Taupe", hex: "#9B8F80"), Swatch.new(name: "Soft plum", hex: "#876A83"), "Soft cool and warm tones balance each other without overpowering." ],
-        [ Swatch.new(name: "Muted rose", hex: "#B9858B"), Swatch.new(name: "Soft white", hex: "#F1EFEA"), Swatch.new(name: "Eucalyptus", hex: "#7F9788"), "Muted rose and eucalyptus add gentle contrast over a light base." ]
       ],
       gold_metal_percentage: 50,
       lean_away: [
@@ -290,23 +186,6 @@ class StylePalette
         Swatch.new(name: "Brick", hex: "#A8452E", why: nil),
         Swatch.new(name: "Plum", hex: "#5C3350", why: nil),
         Swatch.new(name: "Copper", hex: "#B5651D", why: nil)
-      ],
-      neutrals: [
-        Swatch.new(name: "Warm cream", hex: "#F1E8D6", why: nil),
-        Swatch.new(name: "Warm sand", hex: "#CDBB9B", why: nil),
-        Swatch.new(name: "Espresso", hex: "#38251D", why: nil)
-      ],
-      color_combinations: [
-        [ 0, 0, "Olive and marigold pull the warm gold-green energy straight from hazel eyes." ],
-        [ 1, 2, "Burgundy and plum both echo the red note that makes hazel green pop, without repeating the same wine tone twice." ],
-        [ 2, 3, "Camel and copper share a warm metallic quality that layers cleanly without competing." ],
-        [ 5, 1, "Forest green and brick sit close to opposite on the color wheel, giving hazel eyes real contrast instead of another green pairing." ]
-      ],
-      outfit_combinations: [
-        [ Swatch.new(name: "Olive / moss", hex: "#5E6B2F"), Swatch.new(name: "Warm sand", hex: "#CDBB9B"), Swatch.new(name: "Chocolate brown", hex: "#4A2C21"), "Olive leads the outfit up top, kept easy with warm sand below and grounded in chocolate." ],
-        [ Swatch.new(name: "Warm cream", hex: "#F1E8D6"), Swatch.new(name: "Burgundy / wine", hex: "#6E1F2F"), Swatch.new(name: "Espresso", hex: "#38251D"), "Burgundy takes the bottom this time, framed by a neutral cream top and a deep espresso shoe." ],
-        [ Swatch.new(name: "Deep teal", hex: "#245B56"), Swatch.new(name: "Chocolate brown", hex: "#4A2C21"), Swatch.new(name: "Warm sand", hex: "#CDBB9B"), "Deep teal against chocolate brown creates a rich, grounded base, lightened by a warm sand shoe." ],
-        [ Swatch.new(name: "Navy", hex: "#1F2A44"), Swatch.new(name: "Terracotta", hex: "#C08262"), Swatch.new(name: "Warm cream", hex: "#F1E8D6"), "Navy and terracotta play warm against cool, finished with a soft cream shoe instead of black." ]
       ],
       gold_metal_percentage: 100,
       lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
@@ -379,64 +258,12 @@ class StylePalette
     override ? override[:accent_colors] : bucket[:accent_colors]
   end
 
-  # Three universal anchors (light, mid, dark) used to ground any color in
-  # a wearable outfit -- both by the fixed outfit_combinations above and by
-  # the free-form color search, which needs to build a look around ANY
-  # color in the palette, not just the 4 pre-written ones.
-  def neutrals
-    (override || bucket).fetch(:neutrals)
-  end
-
   def lean_away
     override ? override[:lean_away] : bucket[:lean_away]
   end
 
-  def color_combinations
-    palette = override || bucket
-    palette.fetch(:color_combinations).map do |primary_index, accent_index, why|
-      ColorCombination.new(
-        primary: palette.fetch(:lean_toward).fetch(primary_index),
-        accent: palette.fetch(:accent_colors).fetch(accent_index),
-        why: why
-      )
-    end
-  end
-
-  def outfit_combinations
-    palette = override || bucket
-    palette.fetch(:outfit_combinations).map do |top, bottom, shoes, why|
-      OutfitCombination.new(top: top, bottom: bottom, shoes: shoes, why: why)
-    end
-  end
-
   def gold_metal_percentage
     (override || bucket).fetch(:gold_metal_percentage)
-  end
-
-  # Every color in this person's palette that the search box can look up:
-  # their best colors, their accents, and their neutrals. Deliberately
-  # excludes "lean away" -- those are colors to avoid, not to style with.
-  def searchable_colors
-    (lean_toward + accent_colors + neutrals).uniq(&:name)
-  end
-
-  # Given a color from this palette (matched by name, case-insensitive),
-  # returns 3 ready-made looks built around it -- as a top, as a bottom,
-  # and as a shoe -- anchored by this palette's own light/mid/dark
-  # neutrals so the formula stays consistent no matter which color is
-  # picked.
-  def style_color(name)
-    color = searchable_colors.find { |c| c.name.casecmp?(name) }
-    return nil unless color
-
-    light, mid, dark = neutrals
-
-    {
-      color: color,
-      as_top: { top: color, bottom: mid, shoes: dark },
-      as_bottom: { top: light, bottom: color, shoes: dark },
-      as_shoes: { top: light, bottom: mid, shoes: color }
-    }
   end
 
   def metal_preference

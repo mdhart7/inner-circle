@@ -61,45 +61,33 @@
   .combination-body { padding: 10px; font-size: 13px; }
   .combination-names { font-weight: 700; }
   .combination-why { color: #aaa; margin-top: 5px; }
+  .combination-tag { display: inline-block; color: #00bfff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; }
   .metal-preference { margin: 14px 0 24px; }
   .metal-bar { display: flex; width: 100%; height: 36px; overflow: hidden; border: 1px solid #444; border-radius: 10px; }
   .metal-bar-gold, .metal-bar-silver { display: flex; align-items: center; justify-content: center; color: #111; font-size: 12px; font-weight: 700; white-space: nowrap; }
   .metal-bar-gold { background: #C8A24A; }
   .metal-bar-silver { background: #C0C3C7; }
   .metal-caption { color: #aaa; font-size: 13px; margin-top: 7px; }
-  .outfit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 14px; }
-  .outfit-card { overflow: hidden; border: 1px solid #333; border-radius: 14px; background: #1a1a1a; }
-  .outfit-swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .outfit-color { min-width: 0; }
-  .outfit-color-fill { height: 64px; }
-  .outfit-color-info { padding: 8px; font-size: 12px; overflow-wrap: anywhere; }
-  .outfit-color-info strong { display: block; color: #fff; }
-  .outfit-color-info span { color: #aaa; }
-  .outfit-why { color: #aaa; font-size: 13px; padding: 0 10px 10px; }
-
   .retake-link { color: #00bfff; font-size: 14px; text-decoration: none; }
 
-  .color-search-box {
+  .generator-box {
     background: #111; border: 1px solid #333; border-radius: 20px;
-    padding: 16px; margin-bottom: 24px;
+    padding: 16px; margin-top: 24px;
   }
-  .color-search-box label { font-weight: 600; display: block; margin-bottom: 8px; }
-  .color-search-input {
+  .generator-box label { font-weight: 600; display: block; margin-bottom: 8px; }
+  .generator-select {
     width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444;
     background: #1a1a1a; color: #fff; font-size: 16px; box-sizing: border-box;
   }
-  .color-search-hint { color: #888; font-size: 12px; margin-top: 6px; }
-  .color-search-empty { color: #888; font-size: 13px; margin-top: 10px; }
-  .color-search-results { margin-top: 16px; display: none; }
-  .color-search-results.show { display: block; }
-  .csr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-  .csr-card { border: 1px solid #333; border-radius: 14px; overflow: hidden; background: #1a1a1a; }
-  .csr-label { padding: 8px 10px 0; font-weight: 700; font-size: 13px; }
-  .csr-swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 8px; }
-  .csr-fill { height: 48px; }
-  .csr-info { padding: 6px; font-size: 11px; }
-  .csr-info strong { display: block; color: #fff; }
-  .csr-info span { color: #aaa; }
+  .generator-hint { color: #888; font-size: 12px; margin-top: 6px; }
+  .generator-reroll-btn {
+    width: 100%; padding: 12px; border-radius: 12px; background: #1a1a1a;
+    border: 1px solid #00bfff; color: #00bfff; font-weight: 700; font-size: 14px;
+    margin-top: 12px; cursor: pointer; display: none;
+  }
+  .generator-reroll-btn.show { display: block; }
+  .generator-results { margin-top: 16px; display: none; }
+  .generator-results.show { display: block; }
 </style>
 
 <div class="nav-bar">
@@ -112,36 +100,6 @@
   <h1 class="page-title">Your Style</h1>
 
   <% if @style_profile&.persisted? %>
-    <% palette_for_search = @style_profile.palette %>
-    <div class="color-search-box">
-      <label for="color-search-input">Search a color from your palette</label>
-      <input type="text" id="color-search-input" class="color-search-input"
-             placeholder="Try Olive, Navy, Marigold..." autocomplete="off"
-             list="color-search-list" oninput="searchStyleColor(this.value)">
-      <datalist id="color-search-list">
-        <% palette_for_search.searchable_colors.each do |c| %>
-          <option value="<%= c.name %>"></option>
-        <% end %>
-      </datalist>
-      <p class="color-search-hint">Type a color's name to see how to wear it as a top, a bottom, or a shoe.</p>
-      <p class="color-search-empty" id="color-search-empty" hidden>No color in your palette matches that.</p>
-      <div class="color-search-results" id="color-search-results"></div>
-    </div>
-
-    <script type="application/json" id="color-search-data"><%== raw(
-      palette_for_search.searchable_colors.to_h do |c|
-        result = palette_for_search.style_color(c.name)
-        [
-          c.name,
-          {
-            as_top: { top: result[:as_top][:top].to_h, bottom: result[:as_top][:bottom].to_h, shoes: result[:as_top][:shoes].to_h },
-            as_bottom: { top: result[:as_bottom][:top].to_h, bottom: result[:as_bottom][:bottom].to_h, shoes: result[:as_bottom][:shoes].to_h },
-            as_shoes: { top: result[:as_shoes][:top].to_h, bottom: result[:as_shoes][:bottom].to_h, shoes: result[:as_shoes][:shoes].to_h }
-          }
-        ]
-      end.to_json
-    ) %></script>
-
     <p class="page-subtitle">
       Based on your questionnaire answers.
       <%= link_to "Retake", "#", class: "retake-link", onclick: "document.getElementById('questionnaire').hidden = false; document.getElementById('results').hidden = true; return false;" %>
@@ -198,22 +156,6 @@
         <p class="metal-caption"><%= palette.metal_preference %> based on your undertone.</p>
       </div>
 
-      <h3>Top color combinations</h3>
-      <div class="combination-grid">
-        <% palette.color_combinations.each do |combination| %>
-          <div class="combination-card">
-            <div class="combination-colors" aria-label="<%= "#{combination.primary.name} and #{combination.accent.name}" %>">
-              <div style="background: <%= combination.primary.hex %>;"></div>
-              <div style="background: <%= combination.accent.hex %>;"></div>
-            </div>
-            <div class="combination-body">
-              <div class="combination-names"><%= combination.primary.name %> + <%= combination.accent.name %></div>
-              <p class="combination-why"><%= combination.why %></p>
-            </div>
-          </div>
-        <% end %>
-      </div>
-
       <h3>Lean away</h3>
       <% if palette.lean_away_intro %>
         <p class="page-subtitle"><%= palette.lean_away_intro %></p>
@@ -235,25 +177,24 @@
         <% end %>
       </div>
 
-      <h3>Outfit recommendations</h3>
-      <p class="page-subtitle">Four color combinations picked for your profile.</p>
-      <div class="outfit-grid">
-        <% palette.outfit_combinations.each_with_index do |outfit, index| %>
-          <div class="outfit-card">
-            <div class="outfit-swatches">
-              <% [ [ "Top", outfit.top ], [ "Bottoms", outfit.bottom ], [ "Shoes", outfit.shoes ] ].each do |label, swatch| %>
-                <div class="outfit-color">
-                  <div class="outfit-color-fill" style="background: <%= swatch.hex %>;" aria-label="<%= "#{label}: #{swatch.name}" %>"></div>
-                  <div class="outfit-color-info">
-                    <strong><%= label %></strong>
-                    <span><%= swatch.name %></span>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-            <p class="outfit-why"><strong>Look <%= index + 1 %>:</strong> <%= outfit.why %></p>
-          </div>
-        <% end %>
+      <h3>Outfit generator</h3>
+      <div class="generator-box">
+        <label for="generator-select">Pick one of your 8 main colors</label>
+        <select id="generator-select" class="generator-select" onchange="generateOutfits(true)">
+          <option value="">Choose a color...</option>
+          <% palette.lean_toward.each do |c| %>
+            <option value="<%= c.name %>"><%= c.name %></option>
+          <% end %>
+        </select>
+        <p class="generator-hint">
+          Generates 4 random pairings: a close shade, a contrasting shade, one of your accent colors,
+          and another color from your palette. Not limited to your palette's exact hexes for the
+          close/contrasting shades &mdash; those pull from anywhere on the color wheel.
+        </p>
+        <button type="button" class="generator-reroll-btn" id="generator-reroll-btn" onclick="generateOutfits(false)">
+          Generate another set
+        </button>
+        <div class="generator-results" id="generator-results"></div>
       </div>
     </div>
 
@@ -261,55 +202,147 @@
       <%= render "form", style_profile: @style_profile %>
     </div>
 
-  <script>
-    function swatchHtml(role, swatch) {
-      return `<div class="outfit-color">
-        <div class="outfit-color-fill" style="background: ${swatch.hex};" aria-label="${role}: ${swatch.name}"></div>
-        <div class="outfit-color-info"><strong>${role}</strong><span>${swatch.name}</span></div>
-      </div>`;
-    }
+    <script type="application/json" id="generator-data"><%== raw(
+      {
+        lean_toward: palette.lean_toward.map { |c| { name: c.name, hex: c.hex } },
+        accent_colors: palette.accent_colors.map { |c| { name: c.name, hex: c.hex } }
+      }.to_json
+    ) %></script>
 
-    function lookCard(label, look) {
-      return `<div class="csr-card">
-        <div class="csr-label">${label}</div>
-        <div class="csr-swatches">
-          ${swatchHtml("Top", look.top)}
-          ${swatchHtml("Bottom", look.bottom)}
-          ${swatchHtml("Shoes", look.shoes)}
-        </div>
-      </div>`;
-    }
-
-    function searchStyleColor(query) {
-      const dataEl = document.getElementById("color-search-data");
-      const resultsEl = document.getElementById("color-search-results");
-      const emptyEl = document.getElementById("color-search-empty");
-      const data = JSON.parse(dataEl.textContent);
-
-      const trimmed = query.trim().toLowerCase();
-      if (!trimmed) {
-        resultsEl.classList.remove("show");
-        emptyEl.hidden = true;
-        return;
+    <script>
+      // -- hex <-> HSL, so "close" and "contrasting" shades can come from
+      // anywhere on the color wheel, not just this person's own swatches.
+      function hexToHsl(hex) {
+        const r = parseInt(hex.slice(1, 3), 16) / 255;
+        const g = parseInt(hex.slice(3, 5), 16) / 255;
+        const b = parseInt(hex.slice(5, 7), 16) / 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s;
+        const l = (max + min) / 2;
+        if (max === min) {
+          h = s = 0;
+        } else {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            default: h = (r - g) / d + 4;
+          }
+          h /= 6;
+        }
+        return [h * 360, s * 100, l * 100];
       }
 
-      const matchName = Object.keys(data).find((name) => name.toLowerCase() === trimmed);
-      if (!matchName) {
-        resultsEl.classList.remove("show");
-        emptyEl.hidden = false;
-        return;
+      function hslToHex(h, s, l) {
+        h = ((h % 360) + 360) % 360;
+        s = Math.min(100, Math.max(0, s)) / 100;
+        l = Math.min(100, Math.max(0, l)) / 100;
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+        const m = l - c / 2;
+        let r, g, b;
+        if (h < 60) [r, g, b] = [c, x, 0];
+        else if (h < 120) [r, g, b] = [x, c, 0];
+        else if (h < 180) [r, g, b] = [0, c, x];
+        else if (h < 240) [r, g, b] = [0, x, c];
+        else if (h < 300) [r, g, b] = [x, 0, c];
+        else [r, g, b] = [c, 0, x];
+        const toHex = (v) => Math.round((v + m) * 255).toString(16).padStart(2, "0");
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
       }
 
-      const entry = data[matchName];
-      resultsEl.innerHTML = `<div class="csr-grid">
-        ${lookCard(matchName + " as a top", entry.as_top)}
-        ${lookCard(matchName + " as a bottom", entry.as_bottom)}
-        ${lookCard(matchName + " as a shoe", entry.as_shoes)}
-      </div>`;
-      resultsEl.classList.add("show");
-      emptyEl.hidden = true;
-    }
-  </script>
+      // Rough, procedural naming for colors generated on the fly (not from
+      // this person's curated swatches), so results still show a label
+      // instead of just a hex code.
+      function approxColorName(h, s, l) {
+        const hues = [
+          [15, "Red"], [45, "Orange"], [70, "Amber"], [90, "Yellow"], [150, "Green"],
+          [180, "Teal"], [210, "Cyan"], [240, "Blue"], [270, "Indigo"], [300, "Purple"],
+          [330, "Magenta"], [360, "Red"]
+        ];
+        let base = "Red";
+        for (const [max, label] of hues) {
+          if (h <= max) { base = label; break; }
+        }
+        const lightnessWord = l < 25 ? "Deep " : l > 78 ? "Pale " : l > 60 ? "Light " : "";
+        const satWord = s < 28 ? "Muted " : "";
+        return `${lightnessWord}${satWord}${base}`.trim();
+      }
+
+      function randomBetween(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function randomSign() {
+        return Math.random() < 0.5 ? -1 : 1;
+      }
+
+      function swatchHtml(name, hex) {
+        return `<div style="background: ${hex};"></div>`;
+      }
+
+      function combinationCard(tag, baseName, baseHex, otherName, otherHex, why) {
+        return `<div class="combination-card">
+          <div class="combination-colors" aria-label="${baseName} and ${otherName}">
+            ${swatchHtml(baseName, baseHex)}
+            ${swatchHtml(otherName, otherHex)}
+          </div>
+          <div class="combination-body">
+            <span class="combination-tag">${tag}</span>
+            <div class="combination-names">${baseName} + ${otherName}</div>
+            <p class="combination-why">${why}</p>
+          </div>
+        </div>`;
+      }
+
+      function generateOutfits(fromSelect) {
+        const select = document.getElementById("generator-select");
+        const resultsEl = document.getElementById("generator-results");
+        const rerollBtn = document.getElementById("generator-reroll-btn");
+        const data = JSON.parse(document.getElementById("generator-data").textContent);
+
+        if (fromSelect && !select.value) {
+          resultsEl.classList.remove("show");
+          rerollBtn.classList.remove("show");
+          return;
+        }
+
+        const base = data.lean_toward.find((c) => c.name === select.value);
+        if (!base) return;
+
+        const [baseH, baseS, baseL] = hexToHsl(base.hex);
+        // Grays have no meaningful hue, so start their wheel pairings at slate blue.
+        const wheelH = baseS < 10 ? 210 : baseH;
+        const wheelS = baseS < 10 ? 45 : baseS;
+
+        // 1) Close: a nearby hue on the wheel (analogous).
+        const closeH = wheelH + randomSign() * randomBetween(15, 45);
+        const closeHex = hslToHex(closeH, wheelS, baseL);
+        const closeName = approxColorName(((closeH % 360) + 360) % 360, wheelS, baseL);
+
+        // 2) Contrasting: roughly opposite on the wheel (near-complementary).
+        const farH = wheelH + 180 + randomSign() * randomBetween(0, 25);
+        const farHex = hslToHex(farH, wheelS, baseL);
+        const farName = approxColorName(((farH % 360) + 360) % 360, wheelS, baseL);
+
+        // 3) One of this person's own accent colors, picked at random.
+        const accent = data.accent_colors[Math.floor(Math.random() * data.accent_colors.length)];
+
+        // 4) Another color from their own 8-color palette (never the same one picked).
+        const others = data.lean_toward.filter((c) => c.name !== base.name);
+        const other = others[Math.floor(Math.random() * others.length)];
+
+        resultsEl.innerHTML = `<div class="combination-grid">
+          ${combinationCard("Close shade", base.name, base.hex, closeName, closeHex, "A nearby hue on the color wheel for a tonal, low-contrast pairing.")}
+          ${combinationCard("Contrasting shade", base.name, base.hex, farName, farHex, "Roughly opposite on the color wheel, for real contrast.")}
+          ${combinationCard("Your accent", base.name, base.hex, accent.name, accent.hex, "One of your own accent colors, picked at random.")}
+          ${combinationCard("From your palette", base.name, base.hex, other.name, other.hex, "Another color already in your main palette.")}
+        </div>`;
+        resultsEl.classList.add("show");
+        rerollBtn.classList.add("show");
+      }
+    </script>
 
   <% else %>
     <p class="page-subtitle">Answer a few questions and get a color palette built around you.</p>
