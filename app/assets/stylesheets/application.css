@@ -21,10 +21,8 @@
   text-decoration: none;
 }
 
-.nav-bar .back-to-feed-icon {
-  width: 14px;
-  height: 14px;
-  flex: 0 0 14px;
+.nav-bar .back-to-feed-link i {
+  font-size: 14px;
 }
 
 .nav-bar .back-to-feed-link:hover,
