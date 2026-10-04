@@ -35,6 +35,7 @@
   <div class="login-form">
     <h1>Log In</h1>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= hidden_field_tag :ref, params[:ref] if params[:ref].present? %>
       <div class="form-group">
         <%= f.label :email %>
         <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "your@email.com" %>
@@ -52,7 +53,7 @@
       <%= f.submit "Log In", class: "submit-btn" %>
     <% end %>
     <div class="form-link">
-      Don't have an account? <%= link_to "Sign up", new_user_registration_path %>
+      Don't have an account? <%= link_to "Sign up", new_user_registration_path(ref: params[:ref]) %>
     </div>
   </div>
 </div>
