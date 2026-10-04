@@ -74,6 +74,8 @@
   .rule { background: #111; border: 1px solid #333; border-radius: 14px; padding: 12px 14px; }
   .rule b { display: block; }
   .rule p { color: #aaa; font-size: 14px; margin: 4px 0 0; }
+  .fill-strip { display: flex; }
+  .fill-strip span { flex: 1; }
 
   .generator-box {
     background: #111; border: 1px solid #333; border-radius: 20px;
@@ -192,12 +194,17 @@
       <div class="swatch-grid">
         <% palette.lean_away.each do |s| %>
           <div class="swatch">
-            <% if s.hex %>
-              <div class="fill" style="background: <%= s.hex %>;"></div>
+            <% colors = s.hexes.presence || (s.hex ? [ s.hex ] : []) %>
+            <% if colors.any? %>
+              <div class="fill fill-strip">
+                <% colors.each do |hex| %>
+                  <span style="background: <%= hex %>;"></span>
+                <% end %>
+              </div>
             <% end %>
             <div class="body">
               <b><%= s.name %></b>
-              <% if s.hex %>
+              <% if s.hex && s.hexes.blank? %>
                 <span class="hex"><%= s.hex %></span>
               <% end %>
               <p class="why"><%= s.why %></p>

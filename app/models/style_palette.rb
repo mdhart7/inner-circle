@@ -2,7 +2,7 @@
 # plain color-theory rules (undertone + contrast level) rather than AI.
 # No API calls, no cost — this is a lookup table.
 class StylePalette
-  Swatch = Struct.new(:name, :hex, :why, keyword_init: true)
+  Swatch = Struct.new(:name, :hex, :why, :hexes, keyword_init: true)
 
   BUCKETS = {
     %w[warm high] => {
@@ -61,9 +61,9 @@ class StylePalette
       ],
       gold_metal_percentage: 100,
       lean_away: [
-        Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend"),
+        Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for your natural blend", hexes: [ "#111111", "#FFFFFF" ]),
         Swatch.new(name: "Icy Cool Blue", hex: "#B7D3E0", why: "fights the warm undertone"),
-        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "overwhelms a low-contrast palette"),
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "overwhelms a low-contrast palette", hexes: [ "#39FF14", "#FF2E93", "#00E5FF" ]),
         Swatch.new(name: "Cool Charcoal", hex: "#3B3F44", why: "too stark next to soft coloring")
       ]
     },
@@ -126,7 +126,7 @@ class StylePalette
         Swatch.new(name: "Bright Orange", hex: "#D2601A", why: "too warm and too bold"),
         Swatch.new(name: "Golden Yellow", hex: "#E8B923", why: "warm and saturated, fights soft cool coloring"),
         Swatch.new(name: "Warm Camel", hex: "#C19A6B", why: "too warm for cool undertones"),
-        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too much contrast for a soft palette")
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too much contrast for a soft palette", hexes: [ "#39FF14", "#FF2E93", "#00E5FF" ])
       ]
     },
     %w[neutral high] => {
@@ -154,7 +154,7 @@ class StylePalette
       ],
       gold_metal_percentage: 50,
       lean_away: [
-        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature"),
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "too extreme in either temperature", hexes: [ "#39FF14", "#FF2E93", "#00E5FF" ]),
         Swatch.new(name: "Very Warm Orange", hex: "#D2601A", why: "pushes past your balanced undertone"),
         Swatch.new(name: "Icy Pastel Blue", hex: "#BFD9E8", why: "pushes too far cool"),
         Swatch.new(name: "Overly Warm Gold", hex: "#D4AF37", why: "too warm-leaning for neutral skin")
@@ -185,8 +185,8 @@ class StylePalette
       ],
       gold_metal_percentage: 50,
       lean_away: [
-        Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for soft coloring"),
-        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "overwhelms a muted, blended palette"),
+        Swatch.new(name: "Stark Black + White", hex: "#111111", why: "too much contrast for soft coloring", hexes: [ "#111111", "#FFFFFF" ]),
+        Swatch.new(name: "Neon Brights", hex: "#39FF14", why: "overwhelms a muted, blended palette", hexes: [ "#39FF14", "#FF2E93", "#00E5FF" ]),
         Swatch.new(name: "Very Warm Orange", hex: "#D2601A", why: "too warm and too bold"),
         Swatch.new(name: "Icy Blue", hex: "#B7D3E0", why: "too cool and too stark")
       ]
@@ -232,10 +232,10 @@ class StylePalette
       gold_metal_percentage: 100,
       lean_away_intro: "These wash out or fight warm skin. They're fine low on the body, broken up by pattern, or set against black.",
       lean_away: [
-        Swatch.new(name: "Pastels", hex: "#BFD9E8", why: "Baby blue, blush, mint. Low saturation washes out warm skin."),
-        Swatch.new(name: "Muddy and dull", hex: "#8A8172", why: "Gray-olive, dusty mauve, taupe-gray. They read flat."),
-        Swatch.new(name: "Neon", hex: "#39FF14", why: "Synthetic brights compete with your skin instead of complementing it."),
-        Swatch.new(name: "Cool gray and icy white", hex: "#D9DEE2", why: "Ashy against warm undertones. Switch to warm charcoal or cream.")
+        Swatch.new(name: "Pastels", hex: "#BFD9EE", why: "Baby blue, blush, mint. Low saturation washes out warm skin.", hexes: [ "#BFD9EE", "#F4C6D0", "#BFE5D3" ]),
+        Swatch.new(name: "Muddy and dull", hex: "#8C8A6E", why: "Gray-olive, dusty mauve, taupe-gray. They read flat.", hexes: [ "#8C8A6E", "#B08D99", "#9A968E" ]),
+        Swatch.new(name: "Neon", hex: "#39FF14", why: "Synthetic brights compete with your skin instead of complementing it.", hexes: [ "#39FF14", "#FF2E93", "#00E5FF" ]),
+        Swatch.new(name: "Cool gray and icy white", hex: "#A9AFB5", why: "Ashy against warm undertones. Switch to warm charcoal or cream.", hexes: [ "#A9AFB5", "#8E97A0", "#F4F8FC" ])
       ]
     }
   }.freeze
