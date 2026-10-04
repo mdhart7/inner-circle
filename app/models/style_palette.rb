@@ -17,6 +17,11 @@ class StylePalette
         Swatch.new(name: "Burgundy", hex: "#722F37", why: "a rich red that balances warm coloring"),
         Swatch.new(name: "Deep Teal", hex: "#1B5B55", why: "adds saturated contrast without feeling icy")
       ],
+      neutrals: [
+        Swatch.new(name: "Ivory", hex: "#F5F0E1", why: "Your light neutral. Warmer and softer than stark white."),
+        Swatch.new(name: "Black", hex: "#141210", why: "Your dark neutral. Strong contrast, and it works with every color on your list.")
+      ],
+      neutral_note: "Lean into ivory and black. They give your coloring the strong light-to-dark contrast it can carry. Skip stark white and cool gray, which look harsh next to warm skin.",
       accent_colors: [
         Swatch.new(name: "Marigold", hex: "#D49A24", why: nil),
         Swatch.new(name: "Paprika", hex: "#C94F2D", why: nil),
@@ -43,6 +48,11 @@ class StylePalette
         Swatch.new(name: "Muted Peach", hex: "#D7A186", why: "a gentle warm accent that blends naturally"),
         Swatch.new(name: "Soft Moss", hex: "#8C8B5A", why: "a quiet green that keeps the palette tonal")
       ],
+      neutrals: [
+        Swatch.new(name: "Warm ivory", hex: "#F2E9D8", why: "Use it wherever you would reach for white."),
+        Swatch.new(name: "Soft chocolate", hex: "#6B4A3A", why: "Does the job black would, without the hard edge.")
+      ],
+      neutral_note: "Lean into warm ivory and soft chocolate over pure white and black. Your coloring blends, so a jump from black to white overpowers it.",
       accent_colors: [
         Swatch.new(name: "Soft coral", hex: "#D88469", why: nil),
         Swatch.new(name: "Saffron", hex: "#C89A3A", why: nil),
@@ -69,6 +79,11 @@ class StylePalette
         Swatch.new(name: "Royal Purple", hex: "#5B2C83", why: "a clear jewel tone that holds its own"),
         Swatch.new(name: "Cobalt", hex: "#0047AB", why: "a vivid cool blue that suits strong contrast")
       ],
+      neutrals: [
+        Swatch.new(name: "Pure white", hex: "#FFFFFF", why: "Your light neutral. Crisp, not creamy."),
+        Swatch.new(name: "Navy", hex: "#14213D", why: "Your dark neutral. Softer than black and still strong enough for your contrast.")
+      ],
+      neutral_note: "Lean into pure white and deep navy. Skip cream, beige, and camel, whose yellow undertone fights cool skin.",
       accent_colors: [
         Swatch.new(name: "Raspberry", hex: "#A3134D", why: nil),
         Swatch.new(name: "Blue violet", hex: "#4B3F9B", why: nil),
@@ -95,6 +110,11 @@ class StylePalette
         Swatch.new(name: "Mauve", hex: "#A77D91", why: "a dusty pink-purple that stays soft"),
         Swatch.new(name: "Eucalyptus", hex: "#78928B", why: "a muted green with a cool cast")
       ],
+      neutrals: [
+        Swatch.new(name: "Soft white", hex: "#F1F3F4", why: "A gentler light neutral than optic white."),
+        Swatch.new(name: "Dove gray", hex: "#A9A9AB", why: "A blended mid-tone neutral that sits quietly next to your colors.")
+      ],
+      neutral_note: "Lean into soft white and dove gray. Skip black and optic white, which overpower soft coloring, and skip beige and camel.",
       accent_colors: [
         Swatch.new(name: "Periwinkle", hex: "#8998C7", why: nil),
         Swatch.new(name: "Orchid", hex: "#A47AA8", why: nil),
@@ -121,6 +141,11 @@ class StylePalette
         Swatch.new(name: "Jade", hex: "#2E7D6B", why: "a clear green that stays balanced"),
         Swatch.new(name: "Plum", hex: "#713B59", why: "a bold but even-toned jewel color")
       ],
+      neutrals: [
+        Swatch.new(name: "White", hex: "#FFFFFF", why: "Your light neutral. Neither creamy nor icy."),
+        Swatch.new(name: "Black", hex: "#111111", why: "Your dark neutral. Works with every color on your list.")
+      ],
+      neutral_note: "Lean into clean white and black. Skip very creamy whites and very icy tints, which pull you too far warm or too far cool.",
       accent_colors: [
         Swatch.new(name: "Cranberry", hex: "#9E3B4F", why: nil),
         Swatch.new(name: "Blue spruce", hex: "#3D7774", why: nil),
@@ -147,6 +172,11 @@ class StylePalette
         Swatch.new(name: "Dusty Blue", hex: "#8299AA", why: "a softened blue with balanced undertones"),
         Swatch.new(name: "Muted Rose", hex: "#B9858B", why: "a gentle warm-cool blend")
       ],
+      neutrals: [
+        Swatch.new(name: "Soft white", hex: "#F1EFEA", why: "Your light neutral. Gentler than optic white."),
+        Swatch.new(name: "Soft charcoal", hex: "#4D5155", why: "Your dark neutral. Gives you depth without black's hard edge.")
+      ],
+      neutral_note: "Lean into soft white and soft charcoal. Black against white is too big a jump for blended coloring.",
       accent_colors: [
         Swatch.new(name: "Soft plum", hex: "#876A83", why: nil),
         Swatch.new(name: "Eucalyptus", hex: "#7F9788", why: nil),
@@ -181,6 +211,18 @@ class StylePalette
         Swatch.new(name: "Terracotta", hex: "#C08262", why: "Adds a softer warm accent than bright orange."),
         Swatch.new(name: "Deep teal", hex: "#245B56", why: "A rich cool-leaning shade that still works with golden skin.")
       ],
+      neutrals: [
+        Swatch.new(name: "Black", hex: "#141210", why: "Strong contrast, and it works with every color on your list."),
+        Swatch.new(name: "Warm charcoal", hex: "#3B3733", why: "The gray that works for you.")
+      ],
+      neutral_note: "Lean into black and warm charcoal over white or cool gray. When you do go light, choose cream, not stark white.",
+      color_theory: [
+        [ "Keep every color warm-leaning.", "Olive, not gray-green. Wine, not blue-red. Navy with ink depth, not bright royal." ],
+        [ "Use your eyes as the palette.", "They hold green, gold, and brown. Wear olive or camel to echo them, or burgundy to contrast the green." ],
+        [ "Win the near-face zone first.", "The 6 inches around your face matter most. Put your best colors in the collar, knit, or tee, and let riskier colors sit low on the body or in shoes." ],
+        [ "Go rich, not pale.", "Deep or saturated mid-to-dark tones read intentional on you. Pale-on-pale washes out. If you wear white, choose cream." ],
+        [ "Let pattern break the rules.", "Plaid, stripes, and embroidery can carry a less flattering color because the pattern breaks it up. A solid lean-away color near your face is the real risk." ]
+      ],
       accent_colors: [
         Swatch.new(name: "Marigold", hex: "#D9A628", why: nil),
         Swatch.new(name: "Brick", hex: "#A8452E", why: nil),
@@ -206,6 +248,23 @@ class StylePalette
     "gray" => "Gray eyes pick up whatever's nearby — richer jewel tones tend to bring out the most color.",
     "amber" => "Amber eyes pair naturally with warm greens, olive, and gold, which echo their own warmth."
   }.freeze
+
+  UNDERTONE_RULES = {
+    "warm" => [ "Keep every color warm-leaning.", "Choose olive over gray-green, wine over blue-red, and ink navy over bright royal." ],
+    "cool" => [ "Keep every color cool-leaning.", "Choose blue-red over orange-red, blue-based greens over yellow-greens, and crisp tones over creamy ones." ],
+    "neutral" => [ "Stay balanced.", "Pick colors that do not lean hard warm or hard cool: greige over camel or ash, and muted teal over bright turquoise." ]
+  }.freeze
+
+  EYE_RULE = [ "Use your eyes as the palette.", "Repeat one of your eye colors near your face (an echo), or pick its opposite on the color wheel (a contrast). Either one makes your eyes the focal point." ].freeze
+
+  NEAR_FACE_RULE = [ "Win the near-face zone first.", "The 6 inches around your face matter most. Put your best colors in the collar, knit, or tee, and let riskier colors sit low on the body or in shoes." ].freeze
+
+  CONTRAST_RULES = {
+    "high" => [ "Go rich, not pale.", "Deep or saturated mid-to-dark tones hold their own against your natural contrast, and pale-on-pale washes you out." ],
+    "soft" => [ "Stay tonal, not stark.", "Close shades of one color family look polished on you. Hard light-to-dark splits, like black against white, overpower soft coloring." ]
+  }.freeze
+
+  PATTERN_RULE = [ "Let pattern break the rules.", "Plaid, stripes, and embroidery can carry a less flattering color because the pattern breaks it up. A solid lean-away color near your face is the real risk." ].freeze
 
   attr_reader :profile
 
@@ -260,6 +319,29 @@ class StylePalette
 
   def lean_away
     override ? override[:lean_away] : bucket[:lean_away]
+  end
+
+  # Two best neutrals for this person, with a short lean-into-these-over-those note.
+  def neutrals
+    (override || bucket).fetch(:neutrals)
+  end
+
+  def neutral_note
+    (override || bucket).fetch(:neutral_note)
+  end
+
+  # Five plain styling rules. A hand-written override can supply its own;
+  # everyone else gets rules built from their undertone and contrast.
+  def color_theory_rules
+    return override[:color_theory] if override && override[:color_theory]
+
+    [
+      UNDERTONE_RULES.fetch(profile.undertone),
+      EYE_RULE,
+      NEAR_FACE_RULE,
+      CONTRAST_RULES.fetch(profile.contrast),
+      PATTERN_RULE
+    ]
   end
 
   def gold_metal_percentage

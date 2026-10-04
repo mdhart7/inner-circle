@@ -70,6 +70,11 @@
   .metal-caption { color: #aaa; font-size: 13px; margin-top: 7px; }
   .retake-link { color: #00bfff; font-size: 14px; text-decoration: none; }
 
+  .rule-list { display: grid; gap: 10px; margin-top: 14px; }
+  .rule { background: #111; border: 1px solid #333; border-radius: 14px; padding: 12px 14px; }
+  .rule b { display: block; }
+  .rule p { color: #aaa; font-size: 14px; margin: 4px 0 0; }
+
   .generator-box {
     background: #111; border: 1px solid #333; border-radius: 20px;
     padding: 16px; margin-top: 24px;
@@ -140,6 +145,21 @@
         <% end %>
       </div>
 
+      <h3>Supporting neutrals</h3>
+      <p class="page-subtitle"><%= palette.neutral_note %></p>
+      <div class="swatch-grid">
+        <% palette.neutrals.each do |s| %>
+          <div class="swatch">
+            <div class="fill" style="background: <%= s.hex %>;"></div>
+            <div class="body">
+              <b><%= s.name %></b>
+              <span class="hex"><%= s.hex %></span>
+              <p class="why"><%= s.why %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
       <h3>Accent colors</h3>
       <div class="swatch-grid">
         <% palette.accent_colors.each do |s| %>
@@ -182,6 +202,16 @@
               <% end %>
               <p class="why"><%= s.why %></p>
             </div>
+          </div>
+        <% end %>
+      </div>
+
+      <h3>Color theory, applied to you</h3>
+      <div class="rule-list">
+        <% palette.color_theory_rules.each_with_index do |(title, body), index| %>
+          <div class="rule">
+            <b><%= index + 1 %>. <%= title %></b>
+            <p><%= body %></p>
           </div>
         <% end %>
       </div>
