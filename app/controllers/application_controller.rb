@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :remember_referral
 
   protected
 
@@ -8,12 +9,12 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    complete_referral(resource, params[:ref])
+    complete_referral(resource, pending_referral)
     stored_location_for(resource) || root_path
   end
 
   def after_sign_up_path_for(resource)
-    complete_referral(resource, params[:ref])
+    complete_referral(resource, pending_referral)
     stored_location_for(resource) || root_path
   end
 
@@ -31,6 +32,16 @@ class ApplicationController < ActionController::Base
     ])
 
     devise_parameter_sanitizer.permit(:sign_in, keys: [ :login ])
+  end
+
+  def remember_referral
+    referral = params[:ref].to_s.strip
+    session[:referrer_username] = referral if referral.present? && !user_signed_in?
+  end
+
+  def pending_referral
+    remembered_referral = session.delete(:referrer_username)
+    params[:ref].presence || remembered_referral
   end
 
   def complete_referral(resource, referral)

@@ -181,7 +181,7 @@
         <% end %>
 
         <div class="form-link">
-            Already have an account? <%= link_to "Log in", new_user_session_path %>
+            Already have an account? <%= link_to "Log in", new_user_session_path(ref: params[:ref]) %>
         </div>
     </div>
 </div>
