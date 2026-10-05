@@ -170,11 +170,13 @@
   .carousel-track {
     display: flex; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
     align-items: flex-start; gap: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    overscroll-behavior-x: contain;
   }
   .carousel-track::-webkit-scrollbar { display: none; }
   .carousel-slide {
     flex: 0 0 100%; min-width: 100%; width: 100%; box-sizing: border-box;
     scroll-snap-align: start;
+    scroll-snap-stop: always; /* one swipe = at most one photo, even on a hard flick */
   }
   .slide-image-wrapper { position: relative; }
   .carousel-arrow {
@@ -454,15 +456,25 @@
     }
   }
 
+  // Distance from one slide's left edge to the next: slide width plus the gap.
+  function slideStep(track) {
+    const first = track.children[0];
+    const second = track.children[1];
+    return second ? second.offsetLeft - first.offsetLeft : track.clientWidth;
+  }
+
+  function activeSlideIndex(track) {
+    return Math.round(track.scrollLeft / slideStep(track));
+  }
+
   function scrollCarousel(button, direction) {
     const track = button.closest(".carousel").querySelector(".carousel-track");
-    track.scrollBy({ left: direction * track.clientWidth, behavior: "smooth" });
+    track.scrollBy({ left: direction * slideStep(track), behavior: "smooth" });
   }
 
   function updateCarouselHeight(track) {
     track.style.height = "auto";
-    const index = Math.round(track.scrollLeft / track.clientWidth);
-    const slide = track.children[index];
+    const slide = track.children[activeSlideIndex(track)];
     if (slide) track.style.height = `${slide.offsetHeight}px`;
   }
 
@@ -474,8 +486,11 @@
       image.addEventListener("load", () => updateCarouselHeight(track));
     });
     if (!dots.length) return;
+    let lastIndex = 0;
     track.addEventListener("scroll", () => {
-      const index = Math.round(track.scrollLeft / track.clientWidth);
+      const index = activeSlideIndex(track);
+      if (index === lastIndex) return;
+      lastIndex = index;
       dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
       updateCarouselHeight(track);
     }, { passive: true });
