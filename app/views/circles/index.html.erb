@@ -44,7 +44,6 @@
   gap: 12px;
   margin-bottom: 25px;
   align-items: stretch;
-  min-height: 350px;
 }
 
 .circle-side-by-side .circle-add-box,
@@ -60,9 +59,8 @@
 
 .circle-side-by-side .circle-add-box form {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  min-height: 0;
+  margin: auto 0;
 }
 
 .circle-side-by-side .circle-add-box,
@@ -88,25 +86,14 @@
 
 .circle-side-by-side .circle-add-btn {
   font-size: 15px;
-  align-self: center;
-  width: min(100%, 200px);
-  flex: 0 0 auto;
   min-height: 52px;
-  margin-top: 32px;
 }
 
 /* Keep the cards compact when two columns are tight, then stack on the
    narrowest phones. */
-@media (max-width: 600px) {
-  .circle-side-by-side {
-    min-height: 280px;
-  }
-}
-
 @media (max-width: 380px) {
   .circle-side-by-side {
     grid-template-columns: minmax(0, 1fr);
-    min-height: 0;
   }
 }
 
