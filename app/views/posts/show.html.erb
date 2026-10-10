@@ -12,6 +12,25 @@
   }
   .shared-post img { display: block; width: 100%; border-radius: 8px; }
   .post-author { color: #aaa; margin-top: 14px; }
+  .shared-carousel { position: relative; }
+  .shared-carousel-track {
+    display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .shared-carousel-track::-webkit-scrollbar { display: none; }
+  .shared-slide { flex: 0 0 100%; min-width: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+  .shared-slide img { margin-bottom: 12px; }
+  .shared-carousel-arrow {
+    position: absolute; top: 35%; transform: translateY(-50%);
+    width: 36px; height: 36px; border: 0; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65); color: #fff; cursor: pointer; z-index: 1;
+  }
+  .shared-carousel-arrow.prev { left: 10px; }
+  .shared-carousel-arrow.next { right: 10px; }
+  .shared-carousel-dots { display: flex; justify-content: center; gap: 7px; margin-top: 12px; }
+  .shared-carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: #444; }
+  .shared-carousel-dot.active { background: #00bfff; }
   .vote-buttons { display: flex; gap: 10px; margin-top: 16px; }
   .vote-btn {
     flex: 1; padding: 14px; border: 0; border-radius: 8px;
@@ -45,40 +64,60 @@
 </div>
 
 <main class="shared-post">
-  <% if @post.image.present? %>
-    <%= image_tag @post.image.url, alt: "Photo shared by #{@post.user.full_name}" %>
-  <% end %>
-  <div class="post-author">Posted by <%= @post.user.full_name %></div>
-
-  <div class="vote-buttons">
-    <button type="button" class="vote-btn vote-yes" onclick="voteOnPost('yes')">Yes</button>
-    <button type="button" class="vote-btn vote-no" onclick="voteOnPost('no')">No</button>
-  </div>
-  <div class="vote-count">
-    <strong id="total-votes"><%= @post.total_votes_count %></strong> votes:
-    <span id="yes-votes"><%= @post.yes_votes_count %></span> yes ·
-    <span id="no-votes"><%= @post.no_votes_count %></span> no
-  </div>
-  <div id="vote-status" class="vote-status">
-    <% if (vote = @post.user_vote(current_user)) %>
-      You voted <%= vote.vote_type %>
-    <% end %>
-  </div>
-  <button type="button" class="share-post-btn" onclick="sharePost()">Share post</button>
-
-  <section class="comments-section">
-    <h2>Comments</h2>
-    <div class="comments-list" id="comments-list">
-      <% @post.comments.each do |comment| %>
-        <div class="comment"><strong><%= comment.user.full_name %>:</strong> <%= comment.body %></div>
+  <% initial_slide_index = @posts.index { |post| post.id == @post.id } || 0 %>
+  <div class="shared-carousel">
+    <div class="shared-carousel-track" id="shared-carousel-track" data-initial-slide="<%= initial_slide_index %>">
+      <% @posts.each_with_index do |post, index| %>
+        <article class="shared-slide">
+          <% if post.image.present? %>
+            <%= image_tag post.image.url, alt: "Photo #{index + 1} shared by #{post.user.full_name}" %>
+          <% end %>
+          <div class="vote-buttons">
+            <button type="button" class="vote-btn vote-yes" onclick="voteOnPost(<%= post.id %>, 'yes')">Yes</button>
+            <button type="button" class="vote-btn vote-no" onclick="voteOnPost(<%= post.id %>, 'no')">No</button>
+          </div>
+          <div class="vote-count">
+            <strong id="total-votes-<%= post.id %>"><%= post.total_votes_count %></strong> votes:
+            <span id="yes-votes-<%= post.id %>"><%= post.yes_votes_count %></span> yes ·
+            <span id="no-votes-<%= post.id %>"><%= post.no_votes_count %></span> no
+          </div>
+          <div id="vote-status-<%= post.id %>" class="vote-status">
+            <% if (vote = post.user_vote(current_user)) %>
+              You voted <%= vote.vote_type %>
+            <% end %>
+          </div>
+          <section class="comments-section">
+            <h2>Comments</h2>
+            <div class="comments-list" id="comments-list-<%= post.id %>">
+              <% post.comments.each do |comment| %>
+                <div class="comment"><strong><%= comment.user.full_name %>:</strong> <%= comment.body %></div>
+              <% end %>
+            </div>
+            <form class="comment-form" onsubmit="return addComment(event, <%= post.id %>)">
+              <input type="text" class="comment-input" id="comment-input-<%= post.id %>"
+                     placeholder="Add a comment..." maxlength="300" required>
+              <button type="submit" class="comment-submit">Post</button>
+            </form>
+          </section>
+        </article>
       <% end %>
     </div>
-    <form class="comment-form" onsubmit="return addComment(event)">
-      <input type="text" class="comment-input" id="comment-input"
-             placeholder="Add a comment..." maxlength="300" required>
-      <button type="submit" class="comment-submit">Post</button>
-    </form>
-  </section>
+    <% if @posts.size > 1 %>
+      <button type="button" class="shared-carousel-arrow prev" onclick="scrollSharedCarousel(-1)" aria-label="Previous photo">
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="shared-carousel-arrow next" onclick="scrollSharedCarousel(1)" aria-label="Next photo">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
+      <div class="shared-carousel-dots" aria-label="Photo navigation">
+        <% @posts.each_with_index do |_post, index| %>
+          <span class="shared-carousel-dot <%= "active" if index == initial_slide_index %>"></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="post-author">Posted by <%= @post.user.full_name %></div>
+  <button type="button" class="share-post-btn" onclick="sharePost()">Share post</button>
 </main>
 
 <script>
@@ -107,9 +146,9 @@
     }
   }
 
-  async function voteOnPost(voteType) {
+  async function voteOnPost(postId, voteType) {
     try {
-      const response = await fetch("<%= vote_post_path(@post) %>", {
+      const response = await fetch(`/posts/${postId}/vote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,23 +159,23 @@
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Vote failed");
 
-      document.getElementById("total-votes").textContent = data.total_count;
-      document.getElementById("yes-votes").textContent = data.yes_count;
-      document.getElementById("no-votes").textContent = data.no_count;
-      document.getElementById("vote-status").textContent = `You voted ${data.user_vote}`;
+      document.getElementById(`total-votes-${postId}`).textContent = data.total_count;
+      document.getElementById(`yes-votes-${postId}`).textContent = data.yes_count;
+      document.getElementById(`no-votes-${postId}`).textContent = data.no_count;
+      document.getElementById(`vote-status-${postId}`).textContent = `You voted ${data.user_vote}`;
     } catch (error) {
       alert(error.message || "Vote failed — try again.");
     }
   }
 
-  async function addComment(event) {
+  async function addComment(event, postId) {
     event.preventDefault();
-    const input = document.getElementById("comment-input");
+    const input = document.getElementById(`comment-input-${postId}`);
     const body = input.value.trim();
     if (!body) return false;
 
     try {
-      const response = await fetch("<%= post_comments_path(@post) %>", {
+      const response = await fetch(`/posts/${postId}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,12 +192,53 @@
       author.textContent = `${data.author}: `;
       wrapper.appendChild(author);
       wrapper.appendChild(document.createTextNode(data.body));
-      document.getElementById("comments-list").appendChild(wrapper);
+      document.getElementById(`comments-list-${postId}`).appendChild(wrapper);
       input.value = "";
     } catch (error) {
       alert(error.message || "Comment failed — try again.");
     }
 
     return false;
+  }
+
+  function scrollSharedCarousel(direction) {
+    const track = document.getElementById("shared-carousel-track");
+    const nextIndex = activeSharedSlideIndex(track) + direction;
+    if (track.children[nextIndex]) {
+      track.scrollTo({ left: sharedSlideLeft(track, nextIndex), behavior: "smooth" });
+    }
+  }
+
+  function sharedSlideLeft(track, index) {
+    return track.children[index].getBoundingClientRect().left -
+      track.getBoundingClientRect().left + track.scrollLeft;
+  }
+
+  function activeSharedSlideIndex(track) {
+    let activeIndex = 0;
+    let smallestDistance = Infinity;
+    for (let index = 0; index < track.children.length; index++) {
+      const distance = Math.abs(sharedSlideLeft(track, index) - track.scrollLeft);
+      if (distance < smallestDistance) {
+        activeIndex = index;
+        smallestDistance = distance;
+      }
+    }
+    return activeIndex;
+  }
+
+  const sharedTrack = document.getElementById("shared-carousel-track");
+  if (sharedTrack) {
+    const initialSlide = Number(sharedTrack.dataset.initialSlide) || 0;
+    sharedTrack.scrollLeft = sharedSlideLeft(sharedTrack, initialSlide);
+
+    const dots = sharedTrack.parentElement.querySelectorAll(".shared-carousel-dot");
+    let lastIndex = initialSlide;
+    sharedTrack.addEventListener("scroll", () => {
+      const index = activeSharedSlideIndex(sharedTrack);
+      if (index === lastIndex) return;
+      lastIndex = index;
+      dots.forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === index));
+    }, { passive: true });
   }
 </script>

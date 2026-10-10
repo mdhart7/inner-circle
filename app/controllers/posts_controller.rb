@@ -8,7 +8,13 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.includes(:user, :votes, comments: :user).find(params[:id])
-    head :not_found unless can_see_post?(@post)
+    return head :not_found unless can_see_post?(@post)
+
+    @posts = if @post.poll
+      @post.poll.posts.includes(:user, :votes, comments: :user).to_a
+    else
+      [ @post ]
+    end
   end
 
   def create
