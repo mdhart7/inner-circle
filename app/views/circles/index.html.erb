@@ -162,6 +162,23 @@
   padding: 8px;
 }
 
+.post-mini-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 12px;
+}
+
+.post-mini-link:hover .post-mini,
+.post-mini-link:focus-visible .post-mini {
+  border-color: #00bfff;
+}
+
+.post-mini-link:focus-visible {
+  outline: 2px solid #00bfff;
+  outline-offset: 3px;
+}
+
 .post-mini-thumbs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -231,23 +248,28 @@
   <% if @my_polls.present? %>
     <div class="posts-grid">
       <% @my_polls.each do |poll| %>
-        <div class="post-mini">
-          <div class="post-mini-thumbs">
-            <% poll.top_posts(3).each_with_index do |post, index| %>
-              <div class="mini-thumb">
-                <% if post.image.present? %>
-                  <img src="<%= post.thumb_url %>" alt="Top photo <%= index + 1 %>" loading="lazy"
-                       onerror="this.onerror=null;this.src='<%= j post.image.url %>'">
-                <% end %>
-                <span class="mini-rank"><%= index + 1 %></span>
-                <span class="mini-yes"><i class="fa-solid fa-check"></i> <%= post.yes_votes_count %></span>
-              </div>
-            <% end %>
+        <% target_post = poll.share_post %>
+        <% next unless target_post %>
+        <%= link_to post_path(target_post), class: "post-mini-link",
+                    aria: { label: "Open all #{poll.posts.size} photos from #{poll.created_at.strftime('%B %-d')}" } do %>
+          <div class="post-mini">
+            <div class="post-mini-thumbs">
+              <% poll.top_posts(3).each_with_index do |post, index| %>
+                <div class="mini-thumb">
+                  <% if post.image.present? %>
+                    <img src="<%= post.thumb_url %>" alt="Top photo <%= index + 1 %>" loading="lazy"
+                         onerror="this.onerror=null;this.src='<%= j post.image.url %>'">
+                  <% end %>
+                  <span class="mini-rank"><%= index + 1 %></span>
+                  <span class="mini-yes"><i class="fa-solid fa-check"></i> <%= post.yes_votes_count %></span>
+                </div>
+              <% end %>
+            </div>
+            <div class="post-mini-meta">
+              <%= pluralize(poll.posts.size, "photo") %> · <%= poll.created_at.strftime("%b %-d") %>
+            </div>
           </div>
-          <div class="post-mini-meta">
-            <%= pluralize(poll.posts.size, "photo") %> · <%= poll.created_at.strftime("%b %-d") %>
-          </div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   <% else %>
