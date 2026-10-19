@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root "pages#index"
 
   get "/up", to: "health#show", as: :rails_health_check
+  get "/up/db", to: "health#db", as: :health_check_with_database
   get "/manifest.json", to: "rails/pwa#manifest", as: :pwa_manifest
   get "/service-worker.js", to: "rails/pwa#service_worker", as: :pwa_service_worker
 
