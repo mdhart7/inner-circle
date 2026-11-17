@@ -31,6 +31,7 @@
 </style>
 
 <div class="login-container">
+  <%= render "shared/install_app" %>
   <div class="back-link"><%= link_to "← Back to Home", root_path %></div>
   <div class="login-form">
     <h1>Log In</h1>
@@ -56,5 +57,4 @@
       Don't have an account? <%= link_to "Sign up", new_user_registration_path(ref: params[:ref]) %>
     </div>
   </div>
-    <%= render "shared/install_app" %>
 </div>

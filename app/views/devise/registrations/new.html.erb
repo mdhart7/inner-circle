@@ -123,6 +123,7 @@
 </style>
 
 <div class="signup-container">
+    <%= render "shared/install_app" %>
     <div class="back-link">
         <%= link_to "← Back to Home", root_path %>
     </div>
@@ -184,5 +185,4 @@
             Already have an account? <%= link_to "Log in", new_user_session_path(ref: params[:ref]) %>
         </div>
     </div>
-    <%= render "shared/install_app" %>
 </div>
