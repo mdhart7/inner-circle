@@ -1,0 +1,28 @@
+<style>
+  .install-banner { margin-top: 16px; padding: 16px; background-color: #1a1a1a; border: 1px solid #333; border-radius: 12px; font-size: 14px; color: #ccc; line-height: 1.5; position: relative; }
+  .install-banner[hidden], .install-banner [hidden] { display: none !important; }
+  .install-banner strong { display: block; color: #fff; font-size: 15px; margin-bottom: 6px; }
+  .install-banner ol { margin: 6px 0 0 18px; padding: 0; }
+  .install-banner .install-btn { width: 100%; margin-top: 10px; padding: 12px; background-color: #00bfff; color: #000; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .install-banner .install-close { position: absolute; top: 6px; right: 10px; background: none; border: none; color: #777; font-size: 20px; cursor: pointer; }
+</style>
+
+<div class="install-banner" data-controller="install" hidden>
+  <button type="button" class="install-close" data-action="install#dismiss" aria-label="Dismiss">&times;</button>
+
+  <div data-install-target="ios" hidden>
+    <strong>Put Inner Circl on your home screen</strong>
+    <ol>
+      <li>Tap the <b>Share</b> button in Safari</li>
+      <li>Scroll and tap <b>Add to Home Screen</b></li>
+      <li>Tap <b>Add</b>. It opens full-screen like an app.</li>
+    </ol>
+  </div>
+
+  <div data-install-target="android" hidden>
+    <strong>Put Inner Circl on your home screen</strong>
+    <span>Install it like an app. No app store needed.</span>
+    <button type="button" class="install-btn" data-install-target="button" data-action="install#install" hidden>Install app</button>
+    <div style="margin-top:8px; color:#999;">Don't see the button? Open the browser menu (⋮) and tap <b>Add to Home screen</b> or <b>Install app</b>.</div>
+  </div>
+</div>
