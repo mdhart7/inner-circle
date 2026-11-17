@@ -17,3 +17,14 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
   });
 }
+
+// Save Chrome/Android's install prompt so the banner on login/signup can offer a one-tap install.
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  window.deferredInstallPrompt = event;
+  window.dispatchEvent(new CustomEvent("install-prompt-ready"));
+});
+window.addEventListener("appinstalled", () => {
+  window.deferredInstallPrompt = null;
+  window.dispatchEvent(new CustomEvent("install-prompt-ready"));
+});
